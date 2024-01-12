@@ -1,7 +1,22 @@
-export default function Header() {
+import React from 'react';
+import { Link } from 'react-router-dom';
+import "../styles/Header.css";
+
+function Header() {
   return (
-    <>
-      <p>header</p>
-    </>
+    <header>
+      <nav>
+        <ul>
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/feed">Feed</Link></li>
+          <li><Link to="/event">Event</Link></li>
+          <li><Link to="/challenge">Challenge</Link></li>
+          <li><Link to="">Donation</Link></li>
+          <li><Link to="/profile">Profile</Link></li>
+        </ul>
+      </nav>
+    </header>
   );
 }
+
+export default Header;
