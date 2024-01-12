@@ -14,17 +14,21 @@ import Challenge from "./pages/Challenge";
 export default function App() {
   return (
     <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/feed" element={<Feed />} />
-        <Route path="/event" element={<Event />} />
-        <Route path="/challenge" element={<Challenge />} />
-      </Routes>
-      <Footer />
+      <div className="wrapper">
+        <Header />
+        <div className="contentWrapper">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/feed" element={<Feed />} />
+            <Route path="/event" element={<Event />} />
+            <Route path="/challenge" element={<Challenge />} />
+          </Routes>
+        </div>
+        <Footer />
+      </div>
     </BrowserRouter>
   );
 }
