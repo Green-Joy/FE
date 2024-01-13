@@ -12,6 +12,7 @@ function Header() {
           <li><Link to="/event">Event</Link></li>
           <li><Link to="/challenge">Challenge</Link></li>
           <li><Link to="">Donation</Link></li>
+          <li><Link to="/login">LogIn</Link></li>
           <li><Link to="/profile">Profile</Link></li>
         </ul>
       </nav>
