@@ -1,0 +1,21 @@
+#profile-info {
+    display: flex;
+}
+
+#profile-image {
+    background-color: #c95656;
+}
+
+#profile-history {
+    display: flex;
+    background-color: #dfb4b4;
+}
+
+#my-contents {
+    display: flex;
+}
+
+
+#my-feed {
+    background-color: #e94747;
+}
