@@ -52,7 +52,7 @@ export default function Footer() {
               </a>
             </li>
             <li>
-              <p>임주혁</p>
+              <p>Lim JuHyuk</p>
               <a href="https://github.com/SiwonHae">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

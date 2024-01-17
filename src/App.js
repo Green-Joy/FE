@@ -31,7 +31,6 @@ export default function App() {
             <Route path="/feedupload" element={<FeedUpload />} />
             <Route path="/eventupload" element={<EventUpload />} />
             <Route path="/challengeupload" element={<ChallengeUpload />} />
-
           </Routes>
         </div>
         <Footer />
