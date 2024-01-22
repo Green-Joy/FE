@@ -33,7 +33,7 @@ export default function Feed() {
 
   return (
     <>
-      <Stack direction="row" spacing={4} align="center">
+      <Stack direction="row" spacing={400} align="center">
         <Heading size="lg" margin={10}>
           What's going on?
         </Heading>

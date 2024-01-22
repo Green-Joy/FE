@@ -1,15 +1,14 @@
-/* .wrapper {
+.wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   height: 100vh;
 }
 
 .contentWrapper {
+  flex: 1;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: flex-start;
   flex-direction: column;
-  padding: 0 10px;
-  background-color: aqua;
-}  */
+  margin: 0 300px;
+}
