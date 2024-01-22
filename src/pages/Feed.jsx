@@ -15,7 +15,7 @@ import {
   CardFooter,
   Spacer,
 } from "@chakra-ui/react";
-import { StarIcon } from "@chakra-ui/icons";
+import { FaRegHeart, FaHeart  } from "react-icons/fa";
 
 export default function Feed() {
   const [isLoaded, setIsLoaded] = React.useState(false);
@@ -64,7 +64,7 @@ export default function Feed() {
                   </Box>
                 </Flex>
               </Flex>
-              <Button flex="1" variant="ghost" leftIcon={<StarIcon />}>
+              <Button flex="1" variant="ghost" leftIcon={<FaRegHeart />}>
                 좋아요
               </Button>
             </CardFooter>
@@ -97,7 +97,7 @@ export default function Feed() {
                   </Box>
                 </Flex>
               </Flex>
-              <Button flex="1" variant="ghost" leftIcon={<StarIcon />}>
+              <Button flex="1" variant="ghost" leftIcon={<FaRegHeart />}>
                 좋아요
               </Button>
             </CardFooter>
@@ -130,7 +130,7 @@ export default function Feed() {
                   </Box>
                 </Flex>
               </Flex>
-              <Button flex="1" variant="ghost" leftIcon={<StarIcon />}>
+              <Button flex="1" variant="ghost" leftIcon={<FaRegHeart />}>
                 좋아요
               </Button>
             </CardFooter>
@@ -163,7 +163,7 @@ export default function Feed() {
                   </Box>
                 </Flex>
               </Flex>
-              <Button flex="1" variant="ghost" leftIcon={<StarIcon />}>
+              <Button flex="1" variant="ghost" leftIcon={<FaRegHeart />}>
                 좋아요
               </Button>
             </CardFooter>
@@ -196,7 +196,7 @@ export default function Feed() {
                   </Box>
                 </Flex>
               </Flex>
-              <Button flex="1" variant="ghost" leftIcon={<StarIcon />}>
+              <Button flex="1" variant="ghost" leftIcon={<FaHeart  />}>
                 좋아요
               </Button>
             </CardFooter>
