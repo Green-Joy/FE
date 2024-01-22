@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   Box,
   Button,
@@ -24,7 +25,7 @@ export default function Feed() {
           What's going on?
         </Heading>
         <Button colorScheme="green" variant="solid">
-          Create Feed
+          <Link to="/feedupload">Create Feed</Link>
         </Button>
       </Stack>
       <SimpleGrid
