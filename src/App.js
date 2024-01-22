@@ -13,6 +13,7 @@ import Challenge from "./pages/Challenge";
 import FeedUpload from "./pages/FeedUpload";
 import EventUpload from "./pages/EventUpload";
 import ChallengeUpload from "./pages/ChallengeUpload";
+import PostDetail from "./pages/test"
 import { Box } from "@chakra-ui/react";
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="/feedupload" element={<FeedUpload />} />
             <Route path="/eventupload" element={<EventUpload />} />
             <Route path="/challengeupload" element={<ChallengeUpload />} />
+            <Route path="/postdetail" element={<PostDetail />} />
           </Routes>
         </div>
         <Box></Box>
