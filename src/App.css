@@ -1,4 +1,4 @@
-/*.wrapper {
+/* .wrapper {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -10,5 +10,6 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-}
-*/
+  padding: 0 10px;
+  background-color: aqua;
+}  */
