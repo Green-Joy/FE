@@ -17,18 +17,11 @@ import {
   ModalHeader,
   ModalBody,
   ModalCloseButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 
 export default function Event() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
@@ -64,22 +57,29 @@ export default function Event() {
                 </Text>
               </CardBody>
               <CardFooter justifyContent="flex-end">
-                <Button
-                  colorScheme="green"
-                  variant="link"
-                  onClick={handleOpenModal}
-                >
+                <Button colorScheme="green" variant="link" onClick={onOpen}>
                   See more ≫
                 </Button>
               </CardFooter>
             </Stack>
           </Card>
-          <Modal isOpen={isModalOpen} onClose={handleCloseModal} size="xl">
+          <Modal isOpen={isOpen} onClose={onClose} size="xl">
             <ModalOverlay />
             <ModalContent>
               <ModalHeader>축제 제목</ModalHeader>
               <ModalCloseButton />
-              <ModalBody>내용</ModalBody>
+              <ModalBody>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  justifyContent="center"
+                  textAlign="center"
+                >
+                  <Image src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60" />
+                  <Text>내용</Text>
+                </Box>
+              </ModalBody>
             </ModalContent>
           </Modal>
         </Box>
@@ -115,24 +115,12 @@ export default function Event() {
                 </Text>
               </CardBody>
               <CardFooter justifyContent="flex-end">
-                <Button
-                  colorScheme="green"
-                  variant="link"
-                  onClick={handleOpenModal}
-                >
+                <Button colorScheme="green" variant="link" onClick={onOpen}>
                   See more ≫
                 </Button>
               </CardFooter>
             </Stack>
           </Card>
-          <Modal isOpen={isModalOpen} onClose={handleCloseModal} size="xl">
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>뉴스 제목</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>내용</ModalBody>
-            </ModalContent>
-          </Modal>
         </Box>
 
         <Box>
@@ -166,24 +154,12 @@ export default function Event() {
                 </Text>
               </CardBody>
               <CardFooter justifyContent="flex-end">
-                <Button
-                  colorScheme="green"
-                  variant="link"
-                  onClick={handleOpenModal}
-                >
+                <Button colorScheme="green" variant="link" onClick={onOpen}>
                   See more ≫
                 </Button>
               </CardFooter>
             </Stack>
           </Card>
-          <Modal isOpen={isModalOpen} onClose={handleCloseModal} size="xl">
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>팁 제목</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>내용</ModalBody>
-            </ModalContent>
-          </Modal>
         </Box>
       </Grid>
     </>

@@ -11,6 +11,7 @@ import {
   CardBody,
   Heading,
   Image,
+  Text,
   SimpleGrid,
   CardFooter,
   Spacer,
@@ -22,20 +23,14 @@ import {
   ModalHeader,
   ModalBody,
   ModalCloseButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 
 export default function Feed() {
   const [isLoaded, setIsLoaded] = React.useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
   return (
     <>
       <Stack direction="row" spacing={4} align="center">
@@ -75,11 +70,7 @@ export default function Feed() {
                   <Heading size="md">환경축제!</Heading>
                 </GridItem>
                 <GridItem colStart={4} colEnd={6}>
-                  <Button
-                    colorScheme="green"
-                    variant="link"
-                    onClick={handleOpenModal}
-                  >
+                  <Button colorScheme="green" variant="link" onClick={onOpen}>
                     See more ≫
                   </Button>
                 </GridItem>
@@ -100,12 +91,23 @@ export default function Feed() {
             </CardFooter>
           </Skeleton>
         </Card>
-        <Modal isOpen={isModalOpen} onClose={handleCloseModal} size="xl">
+        <Modal isOpen={isOpen} onClose={onClose} size="xl">
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>축제 제목</ModalHeader>
             <ModalCloseButton />
-            <ModalBody>내용</ModalBody>
+            <ModalBody>
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                textAlign="center"
+              >
+                <Image src="https://file.newswire.co.kr/data/datafile2/thumb_640/2022/09/3420802290_20220923165542_7678832051.jpg" />
+                <Text>내용</Text>
+              </Box>
+            </ModalBody>
           </ModalContent>
         </Modal>
         <Card>
