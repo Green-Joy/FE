@@ -1,4 +1,5 @@
 import React from 'react';
+import { IoLeaf } from "react-icons/io5";
 import { Link } from 'react-router-dom';
 import "../styles/Header.css";
 
@@ -7,7 +8,7 @@ function Header() {
     <header>
       <nav>
         <ul>
-          <li><Link to="/">LOGO</Link></li>
+          <li><Link to="/"><IoLeaf />Green Joy</Link></li>
           <li><Link to="/feed">Feed</Link></li>
           <li><Link to="/event">Event</Link></li>
           <li><Link to="/challenge">Challenge</Link></li>

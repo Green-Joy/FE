@@ -1,26 +1,48 @@
 header {
   background-color: #d6d6d6;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 50px;
+  padding: 10px 0;
 }
 
 nav {
-  height: 50px;
-  margin: 9px;
+  text-align: center;
 }
 
-nav ul {
+ul {
   list-style: none;
-  display: flex;
-  justify-content: space-around;
-  font-size: 20px;
+  margin: 0;
+  padding: 0;
+  align-items: center;
 }
 
-nav a {
+li {
+  display: inline-block;
+  margin: 0 40px;
+}
+
+li:first-child a {
+  font-weight: 600;
+}
+
+a {
   text-decoration: none;
-  color: black;
-  padding: 50px;
+  font-size: 20px;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+a:hover {
+  color: #009630;
+}
+
+li:nth-last-child(3) {
+  margin-right: 200px;
+}
+
+li:nth-last-child(7) {
+  margin-right: 50px;
+}
+
+li:first-child svg {
+  margin-right: 8px;
 }
