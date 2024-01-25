@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Grid,
-  GridItem,
   Card,
   Image,
   Stack,
@@ -18,6 +18,7 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  Spacer,
 } from "@chakra-ui/react";
 
 export default function Event() {
@@ -27,7 +28,7 @@ export default function Event() {
     <>
       <Grid templateColumns="repeat(3, 1fr)" gap={6}>
         <Box>
-          <Heading size="lg" margin={10} textAlign="center">
+          <Heading size="lg" margin={10} textAlign="left">
             Festival
           </Heading>
           <Card
@@ -85,7 +86,7 @@ export default function Event() {
         </Box>
 
         <Box>
-          <Heading size="lg" margin={10} textAlign="center">
+          <Heading size="lg" margin={10} textAlign="left">
             News
           </Heading>
           <Card
@@ -124,9 +125,19 @@ export default function Event() {
         </Box>
 
         <Box>
-          <Heading size="lg" margin={10} textAlign="center">
-            Tips
-          </Heading>
+          <Stack direction="inline-flex" spacing={2} align="center" mb={0}>
+            <Heading size="lg" marginTop={10} marginLeft={10} marginBottom={4}>
+              Tips
+            </Heading>
+            <Button
+              colorScheme="green"
+              variant="solid"
+              marginTop={7}
+              marginLeft={20}
+            >
+              <Link to="/eventupload">Create Tips</Link>
+            </Button>
+          </Stack>
           <Card
             direction={{ base: "column", sm: "row" }}
             overflow="hidden"

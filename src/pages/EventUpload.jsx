@@ -1,13 +1,55 @@
-import { Image,Text,Box } from '@chakra-ui/react'
+import { useState } from "react";
+import {
+  Image,
+  Box,
+  Heading,
+  Stack,
+  Input,
+  Text,
+  Button,
+  Textarea,
+} from "@chakra-ui/react";
 
 export default function EventUpload() {
-    return (
-      <>
-        <Text></Text>
-        <Box boxSize='sm'>
-  <Image src='https://bit.ly/dan-abramov' alt='Dan Abramov' />
-</Box>
-      </>
-    );
-  }
-  
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+  };
+
+  return (
+    <>
+      <Heading size="lg" margin={8}>
+        Create Tips
+      </Heading>
+      <Box boxSize="sm">
+        {selectedFile && (
+          <Image src={URL.createObjectURL(selectedFile)} mt={4} />
+        )}
+        <Stack spacing={3}>
+          <Text fontSize="xl" as="b">
+            Cover Image
+          </Text>
+          <Input
+            size="lg"
+            type="file"
+            onChange={handleFileChange}
+            accept="image/*"
+          />
+          <Text fontSize="xl" as="b">
+            Title
+          </Text>
+          <Textarea placeholder="Title" size="lg" />
+          <Text fontSize="xl" as="b">
+            Contents
+          </Text>
+          <Textarea placeholder="Contents" />
+          <Button colorScheme="green" variant="solid">
+            Create
+          </Button>
+        </Stack>
+      </Box>
+    </>
+  );
+}
