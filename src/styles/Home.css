@@ -3,33 +3,62 @@
 }
 
 #banner1 {
-    width: 1000px;
+    width: 800px;
+    height: 200px;
     background-color: #d69c9c;
+    padding: 100px;
 }
 
 #banner2 {
     width: 500px;
     background-color: #ee6b6b;
+    padding: 100px;
+    height: 200px;
 }
 
+#content1_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+#content2_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#content3_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
 #contents {
-    width: 100%;
     display: flex;
 }
 
 #feeds {
-    width: 1000px;
+    width: 850px;
     display: flex;
-    background-color: #d3ffa3;
+    /* background-color: #d3ffa3; */
+    height: 300px;
 }
 
 #events {
     display: flex;
-    width: 1000px;
-    background-color: #ced6ff;
+    width: 850px;
+    /* background-color: #ced6ff; */
+    height: 300px;
 }
 
 #news {
-    width: 500px;
-    background-color: #ffdaf7;
+    width: 400px;
+    /* background-color: #ffdaf7; */
+}
+
+#content2 {
+    padding-left: 50px;
 }
