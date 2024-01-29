@@ -2,38 +2,38 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Text,Divider,Box, Input, Button, FormControl, FormLabel, VStack } from '@chakra-ui/react';
 import { FaGoogle } from 'react-icons/fa';
+import axios from 'axios';
+
 const LoginForm = () => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // 로그인 로직 
+ 
+  const handleGoogleLogin = async () => {
+    try {
+      // Make a GET request to your Google OAuth2 endpoint
+      const response = await axios.get('http://35.188.183.95/oauth2/authorization/google');
+
+      // Redirect the user to the Google login page
+      window.location.href = response.data.redirect_uri;
+    } catch (error) {
+      console.error('Google login failed:', error);
+    }
   };
 
-  return (
+
+
+ return (
     <VStack spacing={4} align="stretch" width="300px">
-      <Box p={4} borderWidth={1} borderRadius="md">
-        <form onSubmit={handleSubmit}>
-          <VStack spacing={4} align="stretch">
-            <FormControl>
-              <FormLabel>Email</FormLabel>
-              <Input type="email" placeholder="이메일을 입력하세요" />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Password</FormLabel>
-              <Input type="password" placeholder="비밀번호를 입력하세요" />
-            </FormControl>
-            <Button type="submit" colorScheme="teal">
-              로그인
+    
+            <Button onClick={handleGoogleLogin} leftIcon={<FaGoogle />}>
+              구글 로그인
             </Button>
-            <Button leftIcon={<FaGoogle />}>
-    구글 로그인
-  </Button>
-  <Divider />
-  <Button  colorScheme='teal' variant='link'>
-  <Link to="/signup">Create account?</Link>
-  </Button>
-          </VStack>
-        </form>
-      </Box>
+            <a href='http://35.188.183.95:8080/oauth2/authorization/google'>TEST</a>
+            <Divider />
+            <Button colorScheme="teal" variant="link">
+              <Link to="/signup">Create account?</Link>
+            </Button>
+      
+    
+    
     </VStack>
   );
 };
