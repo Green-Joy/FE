@@ -23,7 +23,7 @@ export default function EventUpload() {
       <Heading size="lg" margin={8}>
         Create Tips
       </Heading>
-      <Box boxSize="sm">
+      <Box maxW="600px" w="100%" p={6} overflow="auto">
         {selectedFile && (
           <Image src={URL.createObjectURL(selectedFile)} mt={4} />
         )}
