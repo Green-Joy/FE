@@ -18,7 +18,6 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
-  Spacer,
 } from "@chakra-ui/react";
 
 export default function Event() {
