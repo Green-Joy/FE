@@ -9,32 +9,26 @@ const LoginForm = () => {
   const handleGoogleLogin = async () => {
     try {
       // Make a GET request to your Google OAuth2 endpoint
-      const response = await axios.get('http://35.188.183.95/oauth2/authorization/google');
-
+      const response = await axios.get('https://greenjoy.dev/oauth2/authorization/google');
+  
       // Redirect the user to the Google login page
       window.location.href = response.data.redirect_uri;
     } catch (error) {
       console.error('Google login failed:', error);
+     
+      alert('Google login failed. Please try again.');
     }
   };
 
 
 
  return (
-    <VStack spacing={4} align="stretch" width="300px">
-    
-            <Button onClick={handleGoogleLogin} leftIcon={<FaGoogle />}>
-              구글 로그인
-            </Button>
-            <a href='http://35.188.183.95:8080/oauth2/authorization/google'>TEST</a>
-            <Divider />
-            <Button colorScheme="teal" variant="link">
-              <Link to="/signup">Create account?</Link>
-            </Button>
-      
-    
-    
-    </VStack>
+<>
+  <Button onClick={handleGoogleLogin} leftIcon={<FaGoogle />}>
+    구글 로그인
+  </Button>
+ </>
+
   );
 };
 
