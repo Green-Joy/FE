@@ -1,34 +1,32 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Text,Divider,Box, Input, Button, FormControl, FormLabel, VStack } from '@chakra-ui/react';
+import { Heading, Button } from '@chakra-ui/react';
 import { FaGoogle } from 'react-icons/fa';
 import axios from 'axios';
 
 const LoginForm = () => {
- 
   const handleGoogleLogin = async () => {
     try {
-      // Make a GET request to your Google OAuth2 endpoint
+      // Send a request to initiate Google OAuth 2.0 authentication
       const response = await axios.get('https://greenjoy.dev/oauth2/authorization/google');
-  
-      // Redirect the user to the Google login page
-      window.location.href = response.data.redirect_uri;
+
+      // Handle the response data
+      console.log(response.data); // This might be the Google login page URL or other necessary data
+
+      // If you want to redirect based on the response, you can uncomment the following line
+      // window.location.href = response.data.redirectUrl;
     } catch (error) {
-      console.error('Google login failed:', error);
-     
-      alert('Google login failed. Please try again.');
+      // Handle errors that may occur during the Google login process
+      console.error('Google login error:', error);
     }
   };
 
-
-
- return (
-<>
-  <Button onClick={handleGoogleLogin} leftIcon={<FaGoogle />}>
-    구글 로그인
-  </Button>
- </>
-
+  return (
+    <>
+      <Heading as='h2' size='xl'  m={5}>Do you want to LogIn?</Heading>
+      <Button size='lg' leftIcon={<FaGoogle />} onClick={handleGoogleLogin}>
+        구글 로그인
+      </Button>
+    </>
   );
 };
 
