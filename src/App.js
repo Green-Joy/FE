@@ -12,6 +12,7 @@ import Challenge from "./pages/Challenge";
 import FeedUpload from "./pages/FeedUpload";
 import EventUpload from "./pages/EventUpload";
 import ChallengeUpload from "./pages/ChallengeUpload";
+import GoogleOAuth2RedirectPage from "./pages/GoogleOAuth2RedirectPage";
 import PostDetail from "./pages/test";
 import { Box } from "@chakra-ui/react";
 
@@ -24,6 +25,10 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route
+              path="/login/oauth2/code/google"
+              element={<GoogleOAuth2RedirectPage />}
+            />
             <Route path="/profile" element={<Profile />} />
             <Route path="/feed" element={<Feed />} />
             <Route path="/event" element={<Event />} />

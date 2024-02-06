@@ -1,53 +1,21 @@
-import React from 'react';
-import { Heading, Button } from '@chakra-ui/react';
-import { FaGoogle } from 'react-icons/fa';
-import {GoogleLogin} from "@react-oauth/google";
-import {GoogleOAuthProvider} from "@react-oauth/google";
-import qs from 'qs';
+import { Heading, Button } from "@chakra-ui/react";
 
+function LoginPage() {
+  const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const GOOGLE_REDIRECT_URI = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
 
-const LoginForm = () => {
-  const AUTHORUIZE_URI = "https://greenjoy.dev/oauth2/authorization/google"
-
-  const queryStr = qs.stringify({
-    client_id: process.env.CLIENT_ID,
-    redirect_uri: window.location.href,
-    response_type: "token",
-    scope: "https://www.googleapis.com/auth/contacts.readonly",
-  });
-
-  const loginUri = AUTHORUIZE_URI + "?" + queryStr;
-
-  const [contactGroups, setContactGroups] = useState([]);
-
-  useEffect(() => {
-    fetch(PEOPLE_URI, {
-      headers: { Authorization: "Bearer " + access_token },
-    })
-      .then((response) => response.json())
-      .then((data) => setContactGroups(data.contactGroups));
-  }, [access_token]);
-
-
-  const responseGoogle = (response) => {
-    // Handle the response from Google authentication
-    console.log(response);
+  const onGoogleSocialLogin = () => {
+    window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=email profile`;
   };
 
   return (
-    <>
-      <Heading as='h2' size='xl' m={5}>로그인 하시겠습니까?</Heading>
-      <GoogleOAuthProvider clientId={clientId}>
-      <GoogleLogin
-        clientId={clientId}
-        buttonText="구글 로그인"
-        onSuccess={responseGoogle}
-        onFailure={responseGoogle}
-        cookiePolicy={'single_host_origin'}
-      />
-      </GoogleOAuthProvider>
-    </>
+    <div>
+      <Heading as="h2" size="xl" m={5}>
+        로그인 하시겠습니까?
+      </Heading>
+      <Button onClick={onGoogleSocialLogin}>구글 소셜 로그인</Button>
+    </div>
   );
-};
+}
 
-export default LoginForm;
+export default LoginPage;
