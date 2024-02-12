@@ -1,39 +1,42 @@
 import { useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function GoogleOAuth2RedirectPage() {
-  const code = new URL(window.location.href).searchParams.get("code");
-
-  const getToken = async () => {
-    const REST_API_KEY = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-    const REDIRECT_URI = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
-    const SECRET_KEY = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
-    const response = await fetch(
-      `https://oauth2.googleapis.com/token?grant_type=authorization_code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&client_secret=${SECRET_KEY}&code=${code}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-        },
-      }
-    );
-    return response.json();
-  };
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (code) {
-      getToken(code).then((res) => {
-        const token = res.access_token;
-        localStorage.setItem("token", token);
+    const url = new URL(window.location.href);
+    const authCode = url.searchParams.get("code");
 
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      });
+    if (!authCode) {
+      // 인증 코드가 없으면 로그인 페이지로 리다이렉트
+      window.location.href = "/login";
+      return;
     }
-  }, [code]);
+
+    // Spring 서버로 인증 코드 전송
+    axios
+      .post(`https://greenjoy.dev/api/users/login`, { authCode })
+      .then((response) => {
+        console.log(response.data);
+        // 서버로부터 randomID를 받아옴
+        const randomId = response.data.id;
+        localStorage.setItem("randomId", randomId);
+        // 메인으로 리다이렉트
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("Failed to send auth code to server", error);
+        // 에러 처리
+      });
+
+    console.log(authCode);
+  }, [navigate]);
 
   return (
     <div>
-      <div />
+      <h1>로그인 중...</h1>
     </div>
   );
 }
