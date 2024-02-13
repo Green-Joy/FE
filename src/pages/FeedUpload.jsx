@@ -11,8 +11,10 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function FeedUpload() {
+  const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
 
   const [formData, setFormData] = useState({
@@ -45,13 +47,14 @@ export default function FeedUpload() {
       data.append(key, formData[key]);
     }
 
-    for (var pair of data.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
+    // for (var pair of data.entries()) {
+    //   console.log(pair[0] + ", " + pair[1]);
+    // }
 
     try {
       const response = await axios.post("https://greenjoy.dev/api/posts", data);
       console.log("Feed created successfully:", response.data);
+      navigate("/feed");
     } catch (error) {
       if (error.response) {
         // 요청 성공, 서버 상태 코드
