@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import {
   Box,
   Button,
@@ -28,6 +29,24 @@ import { FaRegHeart, FaHeart } from "react-icons/fa";
 
 export default function Feed() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [postData, setPostData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // API 호출
+        const response = await axios.get('https://greenjoy.dev/api/posts/1');
+        // API 응답에서 데이터 추출
+        setPostData(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    
+    // 컴포넌트가 마운트될 때 API 호출
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -51,13 +70,13 @@ export default function Feed() {
           <CardBody>
             <Image
               objectFit="cover"
-              src="https://file.newswire.co.kr/data/datafile2/thumb_640/2022/09/3420802290_20220923165542_7678832051.jpg"
+              src={postData.image1}
             />
           </CardBody>
           <CardBody>
             <Grid templateColumns="repeat(5, 1fr)" gap={4}>
               <GridItem colSpan={2}>
-                <Heading size="md">환경축제!</Heading>
+                <Heading size="md">{postData.title}</Heading>
               </GridItem>
               <GridItem colStart={4} colEnd={6}>
                 <Button colorScheme="green" variant="link" onClick={onOpen}>
@@ -71,7 +90,7 @@ export default function Feed() {
               <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
                 <Avatar src="https://cdn.pixabay.com/photo/2020/05/17/20/21/cat-5183427_1280.jpg" />
                 <Box>
-                  <Heading size="sm">닉네임</Heading>
+                  <Heading size="sm">{postData.writer}</Heading>
                 </Box>
               </Flex>
             </Flex>
@@ -83,7 +102,7 @@ export default function Feed() {
         <Modal isOpen={isOpen} onClose={onClose} size="xl">
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>축제 제목</ModalHeader>
+            <ModalHeader>{postData.title}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <Box
@@ -93,8 +112,8 @@ export default function Feed() {
                 justifyContent="center"
                 textAlign="center"
               >
-                <Image src="https://file.newswire.co.kr/data/datafile2/thumb_640/2022/09/3420802290_20220923165542_7678832051.jpg" />
-                <Text>내용</Text>
+                <Image src={postData.image1}/>
+                <Text>{postData.content}</Text>
               </Box>
             </ModalBody>
           </ModalContent>
