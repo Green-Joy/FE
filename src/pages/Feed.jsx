@@ -35,7 +35,7 @@ export default function Feed() {
     const fetchData = async () => {
       try {
         // API 호출
-        const response = await axios.get('https://greenjoy.dev/api/posts/1');
+        const response = await axios.get('https://greenjoy.dev/api/posts/3');
         // API 응답에서 데이터 추출
         setPostData(response.data);
       } catch (error) {

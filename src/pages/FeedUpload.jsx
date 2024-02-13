@@ -17,9 +17,7 @@ export default function FeedUpload() {
 
   const [formData, setFormData] = useState({
     title: "",
-    userId: "p2JgEFQDZu03EjBTB_GYr",
     content: "",
-    // images: [],
   });
 
   const handleFileChange = (e) => {
@@ -35,9 +33,13 @@ export default function FeedUpload() {
   const handleCreateFeed = async () => {
     const data = new FormData();
 
+    // 이미지 있을 경우 data에 추가
     if (selectedFile) {
       data.append("images", selectedFile);
     }
+
+    // 로컬스토리지에 있는 randomId 추가
+    data.append("randomId", localStorage.getItem("randomId"));
 
     for (let key in formData) {
       data.append(key, formData[key]);
@@ -48,10 +50,22 @@ export default function FeedUpload() {
     }
 
     try {
-      const response = await axios.post("http://greenjoy.dev/api/posts", data);
+      const response = await axios.post("https://greenjoy.dev/api/posts", data);
       console.log("Feed created successfully:", response.data);
     } catch (error) {
-      console.error("Error creating feed:", error);
+      if (error.response) {
+        // 요청 성공, 서버 상태 코드
+        console.error(
+          "Server responded with status code:",
+          error.response.status
+        );
+      } else if (error.request) {
+        // 요청 성공, 응답 없음
+        console.error("No response received:", error.request);
+      } else {
+        // 요청 실패
+        console.error("Error:", error.message);
+      }
     }
   };
 
@@ -100,10 +114,6 @@ export default function FeedUpload() {
               value={formData.content}
               onChange={handleInputChange}
             />
-            <Text fontSize="xl" as="b">
-              Location
-            </Text>
-            <Textarea placeholder="Location" size="lg" />
             <Button
               colorScheme="green"
               variant="solid"
