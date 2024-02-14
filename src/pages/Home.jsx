@@ -11,13 +11,50 @@ import Slider from 'react-slick';
 import SimpleSlider1 from '../components/Banner1.jsx';
 import SimpleSlider2 from '../components/Banner2.jsx';
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 
 export default function Home() {
+  const [postData, setPostData] = useState([]);
+
   const { isOpen: isOpen1, onOpen: onOpen1, onClose: onClose1 } = useDisclosure();
   const { isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2 } = useDisclosure();
   const { isOpen: isOpen3, onOpen: onOpen3, onClose: onClose3 } = useDisclosure();
   const { isOpen: isOpen4, onOpen: onOpen4, onClose: onClose4 } = useDisclosure();
+
+
+  useEffect(() => {
+    const fetchData = async (index) => {
+      try {
+        const response = await axios.get(`https://greenjoy.dev/api/posts/${index}`);
+        return response.data;
+      } catch (error) {
+        console.error(`Error fetching data for post ${index}:`, error);
+        return null;
+      }
+    };
+
+    const getRandomIndex = (max) => Math.floor(Math.random() * max) + 1;
+
+    const loadData = async () => {
+      const maxPosts = 4; // Number of posts to display
+      let fetchedData = [];
+
+      while (fetchedData.length < maxPosts) {
+        const index = getRandomIndex(10); // 10개있다고 가정(수정 필요)
+        const data = await fetchData(index);
+
+        if (data !== null) {
+          fetchedData.push(data);
+        }
+      }
+
+      setPostData(fetchedData);
+      console.log('Fetched data:', fetchedData);
+    };
+
+    loadData();
+  }, []);
 
   return (
     <>
@@ -39,27 +76,13 @@ export default function Home() {
       </div>
   
 <div id="feeds">
+{postData.map((post, index) => (
+ <Box key={index} boxSize="sm" p={2}>
+  <Image src={post.image1}alt={`Post ${index}`}  />
+  <Text>{post.writer}
+</Text>
+</Box>))}
 
-<Box boxSize='sm'p={2} >
-  <Image src='https://bit.ly/dan-abramov' alt='Dan Abramov' />
-  <Text>사용자1
-</Text>
-</Box>
-<Box boxSize='sm'p={2} >
-  <Image src='https://bit.ly/dan-abramov' alt='Dan Abramov' />
-  <Text>사용자2
-</Text>
-</Box>
-<Box boxSize='sm'p={2} >
-  <Image src='https://bit.ly/dan-abramov' alt='Dan Abramov' />
-  <Text>사용자3
-</Text>
-</Box>
-<Box boxSize='sm'p={2} >
-  <Image src='https://bit.ly/dan-abramov' alt='Dan Abramov' />
-  <Text>사용자4
-</Text>
-</Box>
 </div>
 <div id="content2_header">
 <Text fontSize='lg'>EVENTS</Text>
