@@ -46,9 +46,9 @@ export default function EventUpload() {
       data.append(key, formData[key]);
     }
 
-    for (var pair of data.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
+    // for (var pair of data.entries()) {
+    //   console.log(pair[0] + ", " + pair[1]);
+    // }
 
     try {
       const response = await axios.post("https://greenjoy.dev/api/infos", data);
