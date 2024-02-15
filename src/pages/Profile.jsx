@@ -1,55 +1,113 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Center, Circle, Heading, Image, Text, HStack, Grid, GridItem } from '@chakra-ui/react';
-import { DeleteIcon } from '@chakra-ui/icons'
+import { DeleteIcon } from '@chakra-ui/icons';
+import axios from 'axios';
+import { MdOutlineImageNotSupported } from 'react-icons/md';
+
 const Profile = () => {
-  const user = {
-    name: 'syeon',
-    profilePicture: 'https://placekitten.com/200/200',
-    posts: [
-      { id: 1, title: 'Feed', content: 'This is my first post.' },
-      { id: 2, title: 'Feed', content: 'Another post by me.' },
-      { id: 3, title: 'Feed', content: 'Another post by me.' },
-      { id: 4, title: 'Tips', content: 'Another post by me.' },
-      { id: 5, title: 'Feed', content: 'Another post by me.' },
-      { id: 6, title: 'Feed', content: 'Another post by me.' },
-      { id: 7, title: 'Feed', content: 'Another post by me.' },
-      // Add more posts as needed
-    ],
-  };
+  const [userData, setUserData] = useState(null);
+  const [matchingContents, setMatchingContents] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const randomId = localStorage.getItem('randomId');
+        const apiUrl = `https://greenjoy.dev/api/users/${randomId}`;
+
+        const response = await axios.get(apiUrl);
+        const fetchedUserData = response.data;
+
+        setUserData({
+          name: fetchedUserData.name,
+          profileImg: fetchedUserData.profileImg,
+          posts: fetchedUserData.posts || [],
+          email: fetchedUserData.email,
+        });
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchMatchingContents = async () => {
+      try {
+        const apiEndpoint = 'https://greenjoy.dev/api/posts?size=5&page=0&sort=createdAt,desc';
+        const response = await axios.get(apiEndpoint);
+        const responseData = response.data;
+    
+        const matchingContents = responseData.content.filter(
+          content => content.writer === userData.name
+        );
+    
+        // console.log('Before Filtering - Length:', responseData.content.length);
+        // console.log('After Filtering - Length:', matchingContents.length);
+
+        setMatchingContents(matchingContents);
+
+        // 확인용
+        matchingContents.forEach(content => {
+          console.log('Matching Post Title:', content.title);
+        });
+      } catch (error) {
+        console.error('Error fetching matching content:', error);
+      }
+    };
+  
+    if (userData) {
+      fetchMatchingContents();
+    }
+  }, [userData]);
+
+
+  if (!userData) {
+    // Loading state
+    return <div>Loading...</div>;
+  }
+
+
+
 
   return (
     <HStack spacing={8} align="flex-start">
       {/* Left side: Profile */}
-      <Box p={3}pt={8}>
+      <Box p={3} pt={8}>
         <Center>
           <Circle size="200px" bg="gray.200">
-            <Image src={user.profilePicture} alt="Profile" borderRadius="full" boxSize="full" />
+            {userData.profileImg ? (
+              <Image src={userData.profileImg} alt="Profile" borderRadius="full" boxSize="full" />
+            ) : (
+              <MdOutlineImageNotSupported size={100} color="gray.500" />
+            )}
           </Circle>
         </Center>
+
         <Box textAlign="center">
-          <Heading>{user.name}</Heading>
+          <Heading m={5}>{userData.name}</Heading>
         </Box>
-        <Box borderWidth="1px" borderRadius="lg" mt={5}>
-          <Text> 잔디심기 ? 메달? </Text>
+        <Box borderWidth="1px" borderRadius="lg" m={5} p={5}>
+          <Text>이매일: {userData.email}</Text>
         </Box>
       </Box>
 
       {/* Right side: List of posts */}
       <Grid templateColumns="repeat(4, 1fr)" gap={4} flex="1" pb={10}>
-        <Heading size="md" pt={5} m={2} gridColumn="1 / -1">
-          My Posts
-        </Heading>
-        {user.posts.map((post) => (
-          <GridItem key={post.id} p={4} borderWidth="1px" borderRadius="lg">
-            <Heading size="sm" mb={2}>
-            <DeleteIcon mb={2} ml={100} />
-              <Image src={user.profilePicture}  />
-              {post.title}
-            </Heading>
-            <Text>{post.content}</Text>
-          </GridItem>
-        ))}
-      </Grid>
+  <Heading size="md" pt={5} m={2} gridColumn="1 / -1">
+    My Posts
+  </Heading>
+  {matchingContents.map((content) => (
+    <GridItem key={content.id} p={4} borderWidth="1px" borderRadius="lg">
+      <Heading size="sm" mb={2}>
+        <DeleteIcon mb={2} ml={100} />
+        <Image src={content.thumbnail} />
+        {content.title}
+      </Heading>
+      <Text>{content.content}</Text>
+    </GridItem>
+  ))}
+</Grid>
     </HStack>
   );
 };
