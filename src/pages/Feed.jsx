@@ -197,6 +197,7 @@ export default function Feed() {
               <Grid templateColumns="repeat(5, 1fr)" gap={1}>
                 <GridItem colSpan={2}>
                   <Heading size="md">{post.title}</Heading>
+                  <Text>해당 글 주소 : src={`https://greenjoy.dev/api/posts/${index}`}</Text>
                 </GridItem>
                 <GridItem colStart={4} colEnd={6}>
                   <Button
@@ -212,7 +213,7 @@ export default function Feed() {
             <CardFooter>
               <Flex spacing="1">
                 <Flex flex="1" gap="1" alignItems="center" flexWrap="wrap">
-                  <Avatar src="https://cdn.pixabay.com/photo/2020/05/17/20/21/cat-5183427_1280.jpg" />
+                   <Avatar src={""} /> {/*사용자 이미지 연동 필요 */}
                   <Box>
                     <Heading size="sm">{post.writer}</Heading>
                   </Box>
