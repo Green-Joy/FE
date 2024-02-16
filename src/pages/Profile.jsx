@@ -34,15 +34,16 @@ const Profile = () => {
   useEffect(() => {
     const fetchMatchingContents = async () => {
       try {
-        const apiEndpoint = 'https://greenjoy.dev/api/posts?size=5&page=0&sort=createdAt,desc';
+        const apiEndpoint = 'https://greenjoy.dev/api/posts?size=100&page=0&sort=createdAt,desc';
         const response = await axios.get(apiEndpoint);
         const responseData = response.data;
     
+        console.log('Before Filtering - Length:', responseData.content.length);
         const matchingContents = responseData.content.filter(
           content => content.writer === userData.name
         );
     
-        // console.log('Before Filtering - Length:', responseData.content.length);
+        
         // console.log('After Filtering - Length:', matchingContents.length);
 
         setMatchingContents(matchingContents);
@@ -68,8 +69,6 @@ const Profile = () => {
   }
 
 
-
-
   return (
     <HStack spacing={8} align="flex-start">
       {/* Left side: Profile */}
@@ -92,22 +91,25 @@ const Profile = () => {
         </Box>
       </Box>
 
-      {/* Right side: List of posts */}
-      <Grid templateColumns="repeat(4, 1fr)" gap={4} flex="1" pb={10}>
-  <Heading size="md" pt={5} m={2} gridColumn="1 / -1">
-    My Posts
-  </Heading>
-  {matchingContents.map((content) => (
-    <GridItem key={content.id} p={4} borderWidth="1px" borderRadius="lg">
-      <Heading size="sm" mb={2}>
-        <DeleteIcon mb={2} ml={100} />
-        <Image src={content.thumbnail} />
-        {content.title}
-      </Heading>
-      <Text>{content.content}</Text>
-    </GridItem>
-  ))}
-</Grid>
+       {/* Right side: List of posts */}
+       <Grid templateColumns="repeat(4, 1fr)" gap={4} flex="1" pb={10}>
+        <Heading size="md" pt={5} m={2} gridColumn="1 / -1">
+          My Posts
+        </Heading>
+        {matchingContents.map((content) => (
+          <GridItem key={content.id} p={4} borderWidth="1px" borderRadius="lg">
+            <Heading size="sm" mb={2}>
+              <DeleteIcon mb={2} ml={100} />
+              <Image src={content.thumbnail} />
+              {content.title}
+            </Heading>
+            <Text>{content.content}</Text>
+            <Text>
+              해당 글 주소: <a href={`https://greenjoy.dev/api/posts/${content.postId}`} target="_blank">{`https://greenjoy.dev/api/posts/${content.postId}`}</a>
+            </Text>
+          </GridItem>
+        ))}
+      </Grid>
     </HStack>
   );
 };
