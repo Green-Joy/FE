@@ -59,6 +59,11 @@ export default function Feed() {
       setPostData(fetchedData.filter(Boolean));
     };
 
+    const storedLikedPosts = JSON.parse(localStorage.getItem("likedPosts"));
+    if (storedLikedPosts) {
+      setLikedPosts(storedLikedPosts);
+    }
+
     fetchAllData();
   }, []);
 
@@ -89,15 +94,16 @@ export default function Feed() {
   };
 
   const handleLikeClick = async (index) => {
-    const randomId = localStorage.getItem("randomId");
     const postId = index + 1;
     const isLiked = !!likedPosts[postId];
 
-    if (!randomId) {
-      console.error("randomId not found in local storage");
-      return;
-    }
     try {
+      const randomId = localStorage.getItem("randomId");
+      if (!randomId) {
+        console.error("randomId not found in local storage");
+        return;
+      }
+
       if (!isLiked) {
         // 좋아요 +1
         await axios.post("https://greenjoy.dev/api/likes/create", {
@@ -125,6 +131,10 @@ export default function Feed() {
       }
       // 좋아요 상태 업데이트
       setLikedPosts((prev) => ({ ...prev, [postId]: !isLiked }));
+
+      // 좋아요 상태를 로컬 스토리지에 저장
+      const updatedLikedPosts = { ...likedPosts, [postId]: !isLiked };
+      localStorage.setItem("likedPosts", JSON.stringify(updatedLikedPosts));
     } catch (error) {
       console.error("Error while handling like click", error);
     }
@@ -197,7 +207,10 @@ export default function Feed() {
               <Grid templateColumns="repeat(5, 1fr)" gap={1}>
                 <GridItem colSpan={2}>
                   <Heading size="md">{post.title}</Heading>
-                  <Text>해당 글 주소 : src={`https://greenjoy.dev/api/posts/${index}`}</Text>
+                  <Text>
+                    해당 글 주소 : src=
+                    {`https://greenjoy.dev/api/posts/${index}`}
+                  </Text>
                 </GridItem>
                 <GridItem colStart={4} colEnd={6}>
                   <Button
@@ -213,7 +226,7 @@ export default function Feed() {
             <CardFooter>
               <Flex spacing="1">
                 <Flex flex="1" gap="1" alignItems="center" flexWrap="wrap">
-                   <Avatar src={""} /> {/*사용자 이미지 연동 필요 */}
+                  <Avatar src={""} /> {/*사용자 이미지 연동 필요 */}
                   <Box>
                     <Heading size="sm">{post.writer}</Heading>
                   </Box>
