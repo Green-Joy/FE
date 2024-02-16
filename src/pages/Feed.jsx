@@ -26,7 +26,7 @@ import {
   useDisclosure,
   Textarea,
 } from "@chakra-ui/react";
-import { FaRegHeart } from "react-icons/fa";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 
 export default function Feed() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -34,6 +34,8 @@ export default function Feed() {
   const [selectedPost, setSelectedPost] = useState(null);
   const [likedPosts, setLikedPosts] = useState({});
   const [comment, setComment] = useState("");
+  const [comments, setComments] = useState({});
+  const [postComments, setPostComments] = useState({});
 
   useEffect(() => {
     const fetchData = async (index) => {
@@ -50,7 +52,9 @@ export default function Feed() {
 
     // 우선 무한스크롤
     const fetchAllData = async () => {
-      const dataPromises = Array.from({ length: 100 }, (_, index) => fetchData(index + 1));
+      const dataPromises = Array.from({ length: 10 }, (_, index) =>
+        fetchData(index + 1)
+      );
       const fetchedData = await Promise.all(dataPromises);
       setPostData(fetchedData.filter(Boolean));
     };
@@ -62,9 +66,26 @@ export default function Feed() {
     return <div>Loading...</div>;
   }
 
-  const handleSeeMoreClick = (index) => {
-    setSelectedPost(postData[index]);
+  const handleSeeMoreClick = async (post) => {
+    setSelectedPost(post);
     onOpen();
+    // 해당 포스트의 댓글을 불러오도록 처리
+    await fetchPostComments(post.id);
+  };
+
+  const fetchPostComments = async (postId) => {
+    try {
+      const response = await axios.get(
+        `https://greenjoy.dev/api/comments/${postId}`
+      );
+      // postId를 키로 가지는 comments 객체에 댓글 저장
+      setComments((prevComments) => ({
+        ...prevComments,
+        [postId]: response.data,
+      }));
+    } catch (error) {
+      console.error(`Error fetching comments for post ${postId}:`, error);
+    }
   };
 
   const handleLikeClick = async (index) => {
@@ -76,38 +97,49 @@ export default function Feed() {
       console.error("randomId not found in local storage");
       return;
     }
-
     try {
-      if (isLiked) {
-        await axios.post("https://greenjoy.dev/api/likes/remove", {
-          randomId,
-          postId,
-        });
-
-        setLikedPosts((prev) => {
-          const copy = { ...prev };
-          delete copy[postId];
-          return copy;
-        });
-      } else {
+      if (!isLiked) {
+        // 좋아요 +1
         await axios.post("https://greenjoy.dev/api/likes/create", {
           randomId,
           postId,
         });
-        setLikedPosts((prev) => ({ ...prev, [postId]: true }));
+        // 해당 포스트의 좋아요 수 업데이트
+        setPostData((prevData) =>
+          prevData.map((post, idx) =>
+            idx === index ? { ...post, likeCount: post.likeCount + 1 } : post
+          )
+        );
+      } else {
+        // 좋아요 -1
+        await axios.post("https://greenjoy.dev/api/likes/remove", {
+          randomId,
+          postId,
+        });
+        // 해당 포스트의 좋아요 수 업데이트
+        setPostData((prevData) =>
+          prevData.map((post, idx) =>
+            idx === index ? { ...post, likeCount: post.likeCount - 1 } : post
+          )
+        );
       }
+      // 좋아요 상태 업데이트
+      setLikedPosts((prev) => ({ ...prev, [postId]: !isLiked }));
     } catch (error) {
       console.error("Error while handling like click", error);
     }
   };
 
   const handleCommentChange = (event) => {
-    setComment(event.target.value);
+    setPostComments({
+      ...postComments,
+      [selectedPost.id]: event.target.value,
+    });
   };
 
   const handleCommentSubmit = async () => {
     const randomId = localStorage.getItem("randomId");
-    const postId = selectedPost.id; // Assuming postId is included in the selectedPost object
+    const postId = selectedPost.index + 1;
 
     if (!randomId) {
       console.error("randomId not found in local storage");
@@ -115,14 +147,23 @@ export default function Feed() {
     }
 
     try {
-      // Send comment to the server
-      await axios.post(`https://greenjoy.dev/api/posts/${postId}/comments`, {
+      const response = await axios.post("https://greenjoy.dev/api/comments", {
         randomId,
-        content: comment,
+        content: postComments[selectedPost.id],
+        postId,
       });
 
-      // Close the modal after successfully submitting the comment
-      onClose();
+      // 댓글 추가
+      setComments((prevComments) => ({
+        ...prevComments,
+        [postId]: [...(prevComments[postId] || []), response.data],
+      }));
+
+      // 댓글 입력창 초기화
+      setPostComments({
+        ...postComments,
+        [selectedPost.id]: "",
+      });
     } catch (error) {
       console.error("Error while submitting comment:", error);
     }
@@ -180,10 +221,10 @@ export default function Feed() {
               <Button
                 flex="1"
                 variant="ghost"
-                leftIcon={<FaRegHeart />}
+                leftIcon=<FaHeart />
                 onClick={() => handleLikeClick(index)}
               >
-                {likedPosts[index + 1] ? "좋아요 취소" : "좋아요"}
+                {post.likeCount}
               </Button>
             </CardFooter>
           </Card>
@@ -207,7 +248,7 @@ export default function Feed() {
               <Text>{selectedPost?.content}</Text>
               <Textarea
                 placeholder="댓글을 입력하세요"
-                value={comment}
+                value={postComments[selectedPost?.id] || ""}
                 onChange={handleCommentChange}
                 size="md"
                 mt={4}
@@ -215,6 +256,19 @@ export default function Feed() {
               <Button colorScheme="blue" onClick={handleCommentSubmit} mt={4}>
                 댓글 작성
               </Button>
+              {selectedPost &&
+                comments[selectedPost.id] &&
+                comments[selectedPost.id].map((comment, idx) => (
+                  <Box
+                    key={idx}
+                    borderWidth="1px"
+                    borderRadius="lg"
+                    p="2"
+                    my="1"
+                  >
+                    <Text>{comment.content}</Text>
+                  </Box>
+                ))}
             </Box>
           </ModalBody>
         </ModalContent>
