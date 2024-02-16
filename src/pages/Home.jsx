@@ -1,13 +1,11 @@
-import { Box,Card, CardHeader,  Modal,
+import { Box,Card,  Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,useDisclosure,
-  ModalCloseButton,CardBody, CardFooter,Heading,Text,Image  ,Stack, HStack, VStack,Button, ButtonGroup } from '@chakra-ui/react'
+  ModalCloseButton,CardBody, CardFooter,Heading,Text,Image  ,Stack,Button} from '@chakra-ui/react'
 import '../styles/Home.css' 
 import React, { useState, useEffect } from 'react';
-import Slider from 'react-slick'; 
 import SimpleSlider1 from '../components/Banner1.jsx';
 import SimpleSlider2 from '../components/Banner2.jsx';
 import { Link } from "react-router-dom";
@@ -41,7 +39,7 @@ export default function Home() {
       let fetchedData = [];
 
       while (fetchedData.length < maxPosts) {
-        const index = getRandomIndex(10); // 10개있다고 가정(수정 필요)
+        const index = getRandomIndex(100); // 100개있다고 가정(수정 필요)
         const data = await fetchData(index);
 
         if (data !== null) {

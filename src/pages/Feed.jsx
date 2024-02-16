@@ -48,10 +48,9 @@ export default function Feed() {
       }
     };
 
+    // 우선 무한스크롤
     const fetchAllData = async () => {
-      const dataPromises = Array.from({ length: 12 }, (_, index) =>
-        fetchData(index + 1)
-      );
+      const dataPromises = Array.from({ length: 100 }, (_, index) => fetchData(index + 1));
       const fetchedData = await Promise.all(dataPromises);
       setPostData(fetchedData.filter(Boolean));
     };
