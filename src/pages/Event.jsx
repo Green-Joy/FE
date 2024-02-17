@@ -29,31 +29,37 @@ export default function Event() {
   const [selectedTip, setSelectedTip] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchNewsData = async () => {
+      try {
+        const response = await axios.get("https://greenjoy.dev/api/articles");
+        setNewsData(response.data);
+      } catch (error) {
+        console.error("Error fetching news data:", error);
+      }
+    };
 
-
-    useEffect(() => {
-      const fetchData = async (tipId) => {
-        try {
+    const fetchTipData = async () => {
+      try {
+        
+        const tipIds = [1, 2, 3]; // 수정필요
+        const tipPromises = tipIds.map(async (tipId) => {
           const response = await axios.get(`https://greenjoy.dev/api/infos/${tipId}`);
           return response.data;
-        } catch (error) {
-          console.error(`Error fetching data for tipId ${tipId}:`, error);
-          return null; 
-        }
-      };
-    
-      const fetchAllData = async () => {
-        try {
-          const tipIds = Array.from({ length: 20 }, (_, index) => index + 1);
-          const dataPromises = tipIds.map((tipId) => fetchData(tipId));
-          const fetchedData = await Promise.all(dataPromises);
-          setTipData(fetchedData.filter(Boolean)); 
-        } catch (error) {
-          console.error("Error fetching all data:", error);
-        }
-      };
-      fetchAllData();
-    }, []);
+        });
+
+        const tipResults = await Promise.all(tipPromises);
+        setTipData(tipResults);
+      } catch (error) {
+        console.error("Error fetching tip data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNewsData();
+    fetchTipData();
+  }, []);
 
   const handleSeeMoreNews = (news) => {
     setSelectedNews(news);
@@ -67,7 +73,7 @@ export default function Event() {
 
   return (
     <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={6}>
-
+      {/* News Section */}
       <Box>
         <Heading size="lg" margin={10} textAlign="left">
           News
@@ -91,7 +97,7 @@ export default function Event() {
                   <Button colorScheme="green" variant="link" onClick={() => handleSeeMoreNews(news)}>
                     See more ≫
                   </Button>
-          
+                  {/* Use Link component or a tag for navigation */}
                   <Link to={news.url} target="_blank" rel="noopener noreferrer">
                     <Button colorScheme="green" variant="link">
                       Read more
@@ -131,11 +137,9 @@ export default function Event() {
                     {tip.title}
                   </Heading>
                   <Text py="2" maxH="80px" overflow="hidden">
-                    
+                    {/* You can use tip.content or another property for the preview */}
                     {tip.content}
                   </Text>
-                  <Text>글쓴이 : {tip.writer}</Text>
-                  
                 </CardBody>
                 <CardFooter justifyContent="flex-end">
                   <Button colorScheme="green" variant="link" onClick={() => handleSeeMoreTip(tip)}>
