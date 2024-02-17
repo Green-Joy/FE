@@ -52,7 +52,7 @@ export default function Feed() {
 
     // 우선 무한스크롤
     const fetchAllData = async () => {
-      const dataPromises = Array.from({ length: 10 }, (_, index) =>
+      const dataPromises = Array.from({ length: 20 }, (_, index) =>
         fetchData(index + 1)
       );
       const fetchedData = await Promise.all(dataPromises);
