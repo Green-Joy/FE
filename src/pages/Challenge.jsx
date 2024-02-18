@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Heading,
   Text,
@@ -6,15 +7,53 @@ import {
   Input,
   Image,
   Stack,
-  Spacer,
+  Button,
 } from "@chakra-ui/react";
 
 export default function Challenge() {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [challenge, setChallenge] = useState(null);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get("https://greenjoy.dev/api/challenge/today")
+      .then((response) => {
+        setChallenge(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching challenge:", error);
+      });
+  }, []);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
+  };
+
+  const handleSubmit = () => {
+    const formData = new FormData();
+    formData.append("randomId", localStorage.getItem("randomId"));
+    formData.append(
+      "content",
+      `${new Date().getMonth() + 1}/${new Date().getDate()} ${challenge}`
+    );
+    formData.append("image", selectedFile);
+
+    // 디버깅
+    // for (var pair of formData.entries()) {
+    //   console.log(pair[0] + ", " + pair[1]);
+    // }
+
+    axios
+      .post("https://greenjoy.dev/api/challenge", formData)
+      .then((response) => {
+        console.log("Upload successful", response);
+        setUploadSuccess(true);
+      })
+      .catch((error) => {
+        console.error("Error uploading file:", error);
+      });
   };
 
   const activeDates = ["2024-01-01", "2024-01-03", "2024-01-05", "2024-01-07"];
@@ -25,13 +64,15 @@ export default function Challenge() {
 
   return (
     <>
-      <Box margin={10} marginLeft={-800}>
+      <Box margin={10} marginLeft={-200} textAlign="left" width="800px">
         <Heading size="lg" color="green">
           Today's challenge
         </Heading>
-        <Text fontSize="5xl" as="b">
-          텀블러 사용하기
-        </Text>
+        {challenge && (
+          <Text fontSize="5xl" as="b">
+            {challenge}
+          </Text>
+        )}
       </Box>
       <Stack direction="row">
         <Box>
@@ -50,6 +91,17 @@ export default function Challenge() {
             onChange={handleFileChange}
             accept="image/*"
           />
+          <Button
+            colorScheme="green"
+            variant="solid"
+            marginTop={7}
+            marginLeft={20}
+            onClick={handleSubmit}
+            disabled={!selectedFile}
+          >
+            Upload
+          </Button>
+          {uploadSuccess && <Text color="green">챌린지 성공!</Text>}
         </Box>
         <Box
           display="grid"
