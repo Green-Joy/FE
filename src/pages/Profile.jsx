@@ -1,8 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Center, Circle, Heading, Image, Text, HStack, Grid, GridItem, Spinner } from '@chakra-ui/react';
-import { DeleteIcon } from '@chakra-ui/icons';
-import axios from 'axios';
-import { MdOutlineImageNotSupported } from 'react-icons/md';
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Center,
+  Circle,
+  Heading,
+  Image,
+  Text,
+  HStack,
+  Grid,
+  GridItem,
+  Spinner,
+} from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
+import axios from "axios";
+import { MdOutlineImageNotSupported } from "react-icons/md";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -13,7 +24,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const randomId = localStorage.getItem('randomId');
+        const randomId = localStorage.getItem("randomId");
         const apiUrl = `https://greenjoy.dev/api/users/${randomId}`;
 
         const response = await axios.get(apiUrl);
@@ -28,8 +39,8 @@ const Profile = () => {
 
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching user data:', error);
-        setError('Error fetching user data');
+        console.error("Error fetching user data:", error);
+        setError("Error fetching user data");
         setLoading(false);
       }
     };
@@ -40,7 +51,8 @@ const Profile = () => {
   useEffect(() => {
     const fetchMatchingContents = async () => {
       try {
-        const apiEndpoint = 'https://greenjoy.dev/api/posts?size=100&page=0&sort=createdAt,desc';
+        const apiEndpoint =
+          "https://greenjoy.dev/api/posts?size=100&page=0&sort=createdAt,desc";
         const response = await axios.get(apiEndpoint);
         const responseData = response.data;
 
@@ -50,8 +62,8 @@ const Profile = () => {
 
         setMatchingContents(matchingContents);
       } catch (error) {
-        console.error('Error fetching matching content:', error);
-        setError('Error fetching matching content');
+        console.error("Error fetching matching content:", error);
+        setError("Error fetching matching content");
       }
     };
 
@@ -63,17 +75,18 @@ const Profile = () => {
   // 삭제
   const handleDeletePost = async (postId) => {
     try {
-      const randomId = localStorage.getItem('randomId');
-      // Corrected the template literals usage in the URL
+      const randomId = localStorage.getItem("randomId");
+
       await axios.post(`https://greenjoy.dev/api/posts/${postId}`, {
-        randomId,
+        randomId: randomId,
       });
 
-      // Optional: Update the state to reflect the deletion without making another API call
-      setMatchingContents((prevContents) => prevContents.filter((content) => content.id !== postId));
+      setMatchingContents((prevContents) =>
+        prevContents.filter((content) => content.postId !== postId)
+      );
     } catch (error) {
-      console.error('Error deleting post:', error);
-      setError('Error deleting post');
+      console.error("Error deleting post:", error);
+      setError("Error deleting post");
     }
   };
 
@@ -92,7 +105,12 @@ const Profile = () => {
         <Center>
           <Circle size="200px" bg="gray.200">
             {userData.profileImg ? (
-              <Image src={userData.profileImg} alt="Profile" borderRadius="full" boxSize="full" />
+              <Image
+                src={userData.profileImg}
+                alt="Profile"
+                borderRadius="full"
+                boxSize="full"
+              />
             ) : (
               <MdOutlineImageNotSupported size={100} color="gray.500" />
             )}
@@ -103,7 +121,7 @@ const Profile = () => {
           <Heading m={5}>{userData.name}</Heading>
         </Box>
         <Box borderWidth="1px" borderRadius="lg" m={5} p={5}>
-          <Text>이매일: {userData.email}</Text>
+          <Text>이메일: {userData.email}</Text>
         </Box>
       </Box>
 
@@ -117,7 +135,7 @@ const Profile = () => {
             <Heading size="sm" mb={2}>
               <DeleteIcon
                 className="delete-icon"
-                onClick={() => handleDeletePost(content.id)}
+                onClick={() => handleDeletePost(content.postId)}
                 sx={{
                   ":hover": {
                     color: "red",
@@ -129,7 +147,7 @@ const Profile = () => {
             </Heading>
             <Text>{content.content}</Text>
             <Text>
-              해당 글 주소:{' '}
+              해당 글 주소:{" "}
               <a
                 href={`https://greenjoy.dev/api/posts/${content.postId}`}
                 target="_blank"
