@@ -8,7 +8,13 @@ import {
   Button,
   CardBody,
   Heading,
-  CardFooter
+  CardFooter,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -24,17 +30,62 @@ const shuffleArray = (array) => {
   return array;
 };
 
+const FeedModal = ({ post, onClose }) => {
+  if (!post) {
+    return null;
+  }
+
+  return (
+    <Modal isOpen={post} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>{post.title}</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Box p={2}>
+            <Image src={post.thumbnail} alt={`Thumbnail for ${post.writer}`} />
+            <Text>Writer : {post.writer}</Text>
+            <Text>{post.content}</Text>
+          </Box>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+
+const TipModal = ({ tip, onClose }) => {
+  if (!tip) {
+    return null; 
+  }
+
+  return (
+    <Modal isOpen={tip} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>{tip.title}</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Box  p={2}>
+            <Image src={tip.thumbnail} alt={`Thumbnail for ${tip.title}`} />
+             <Text>Writer : {tip.writer}</Text>
+            <Text>{tip.content}</Text>
+          </Box>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+};
+
 export default function Home() {
   const [postData, setPostData] = useState([]);
   const [newsData, setNewsData] = useState([]);
   const [tipData, setTipData] = useState([]);
   const [challengeData, setChallengeData] = useState(null);
-
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const [selectedIndex, setSelectedIndex] = useState(null);
-const [modalContent, setModalContent] = useState('');
+  const [selectedTip, setSelectedTip] = useState(null);
+  const [selectedPost, setSelectedPost] = useState(null);
 
 
   useEffect(() => {
@@ -61,10 +112,10 @@ const [modalContent, setModalContent] = useState('');
         setTipData(selectedTipData);
 
         // Challenge data
-const challengeResponse = await axios.get('https://greenjoy.dev/api/challenge/today');
-const challengeData = challengeResponse.data;
-//console.log(challengeData)
-setChallengeData(challengeData);
+        const challengeResponse = await axios.get('https://greenjoy.dev/api/challenge/today');
+        const challengeData = challengeResponse.data;
+        //console.log(challengeData)
+        setChallengeData(challengeData);
 
 
       } catch (error) {
@@ -81,6 +132,13 @@ setChallengeData(challengeData);
   const openUrlInNewTab = (url) => {
     window.open(url, '_blank');
   };
+  const openTipModal = (tip) => {
+    setSelectedTip(tip);
+  };
+  const openFeedModal = (post) => {
+  setSelectedPost(post);
+};
+
 
   return (
     <>
@@ -102,7 +160,11 @@ setChallengeData(challengeData);
 
           <div id="feeds">
             {postData.map((post, index) => (
-              <Box key={index} boxSize="sm" p={2}>
+              <Box key={index} boxSize="sm" p={2}
+              onClick={() => openFeedModal(post)}
+              _hover={{ transform: 'scale(1.05)' }}
+              cursor="pointer"
+              >
                 <Image src={post.thumbnail} alt={`Post ${index}`} />
                 <Text>{post.writer}</Text>
               </Box>
@@ -116,10 +178,14 @@ setChallengeData(challengeData);
 
           <div id="events">
             {tipData.map((tip, index) => (
-              <Box key={index} boxSize="sm" p={2}>
+              <Box key={index} boxSize="sm" p={2} 
+              onClick={() => openTipModal(tip)}
+              _hover={{ transform: 'scale(1.05)' }}
+              cursor="pointer"
+            
+              >
                 <Image src={tip.thumbnail} alt={`Thumbnail for ${tip.title}`} />
-                <Text>{`${tip.title} - ${tip.writer}`}</Text>
-                
+                <Text>{tip.title}</Text>
               </Box>
             ))}
           </div>
@@ -130,14 +196,12 @@ setChallengeData(challengeData);
           </div>
 
           <div id="challenge">
-  <Box boxSize="sm" p={2}>
-    <Text>오늘의 챌린지</Text>
-      <Text>{challengeData}</Text>
-  </Box>
-</div>
+          <Box boxSize="sm" p={2}>
+            <Text>오늘의 챌린지</Text>
+            <Text>{challengeData}</Text>
+          </Box>
+        </div>
           
-
-
         </div>
 
         <div id="content2">
@@ -172,6 +236,9 @@ setChallengeData(challengeData);
 
       {isLoading && <p>Loading...</p>}
       {error && <p>Error: {error.message}</p>}
+
+    <FeedModal post={selectedPost} onClose={() => setSelectedPost(null)} />
+      <TipModal tip={selectedTip} onClose={() => setSelectedTip(null)} />
     </>
   );
 }
