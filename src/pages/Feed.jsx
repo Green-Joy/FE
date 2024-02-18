@@ -66,27 +66,25 @@ export default function Feed() {
   const handleSeeMoreClick = async (post) => {
     setSelectedPost(post);
     onOpen();
-    // 해당 포스트의 댓글을 불러오도록 처리
-    await fetchPostComments(post.id);
   };
 
-  const fetchPostComments = async (postId) => {
+  const fetchPostComments = async (post) => {
     try {
       const response = await axios.get(
-        `https://greenjoy.dev/api/comments/${postId}`
+        `https://greenjoy.dev/api/comments/${post.postId}`
       );
       // postId를 키로 가지는 comments 객체에 댓글 저장
       setComments((prevComments) => ({
         ...prevComments,
-        [postId]: response.data,
+        [post.postId]: response.data,
       }));
     } catch (error) {
-      console.error(`Error fetching comments for post ${postId}:`, error);
+      console.error(`Error fetching comments for post ${post.postId}:`, error);
     }
   };
 
-  const handleLikeClick = async (index) => {
-    const postId = index + 1;
+  const handleLikeClick = async (post) => {
+    const postId = post.postId;
     const isLiked = !!likedPosts[postId];
 
     try {
@@ -98,14 +96,18 @@ export default function Feed() {
 
       if (!isLiked) {
         // 좋아요 +1
+        console.log("Sending request with data:", { randomId, postId });
         await axios.post("https://greenjoy.dev/api/likes/create", {
           randomId,
           postId,
         });
+
         // 해당 포스트의 좋아요 수 업데이트
         setPostData((prevData) =>
-          prevData.map((post, idx) =>
-            idx === index ? { ...post, likeCount: post.likeCount + 1 } : post
+          prevData.map((post) =>
+            post.postId === postId
+              ? { ...post, likeCount: post.likeCount + 1 }
+              : post
           )
         );
       } else {
@@ -116,8 +118,10 @@ export default function Feed() {
         });
         // 해당 포스트의 좋아요 수 업데이트
         setPostData((prevData) =>
-          prevData.map((post, idx) =>
-            idx === index ? { ...post, likeCount: post.likeCount - 1 } : post
+          prevData.map((post) =>
+            post.postId === postId
+              ? { ...post, likeCount: post.likeCount - 1 }
+              : post
           )
         );
       }
@@ -228,7 +232,7 @@ export default function Feed() {
                 flex="1"
                 variant="ghost"
                 leftIcon={<FaHeart />}
-                onClick={() => handleLikeClick(index)}
+                onClick={() => handleLikeClick(post)}
               >
                 {post.likeCount}
               </Button>
