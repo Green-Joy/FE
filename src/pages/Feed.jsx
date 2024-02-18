@@ -38,33 +38,25 @@ export default function Feed() {
   const [postComments, setPostComments] = useState({});
 
   useEffect(() => {
-    const fetchData = async (index) => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `https://greenjoy.dev/api/posts/${index}`
+        const postResponse = await axios.get(
+          "https://greenjoy.dev/api/posts?size=5&page=0&sort=createdAt%2Cdesc"
         );
-        return response.data;
+        const postDataArray = postResponse.data.content;
+        setPostData(postDataArray);
+        //console.log(postDataArray)
       } catch (error) {
-        console.error(`Error fetching data for post ${index}:`, error);
-        return null;
+        console.error("Error fetching post data:", error);
+      }
+
+      const storedLikedPosts = JSON.parse(localStorage.getItem("likedPosts"));
+      if (storedLikedPosts) {
+        setLikedPosts(storedLikedPosts);
       }
     };
 
-    // 우선 무한스크롤
-    const fetchAllData = async () => {
-      const dataPromises = Array.from({ length: 20 }, (_, index) =>
-        fetchData(index + 1)
-      );
-      const fetchedData = await Promise.all(dataPromises);
-      setPostData(fetchedData.filter(Boolean));
-    };
-
-    const storedLikedPosts = JSON.parse(localStorage.getItem("likedPosts"));
-    if (storedLikedPosts) {
-      setLikedPosts(storedLikedPosts);
-    }
-
-    fetchAllData();
+    fetchData();
   }, []);
 
   if (postData.length === 0) {
@@ -201,7 +193,7 @@ export default function Feed() {
         {postData.map((post, index) => (
           <Card key={index}>
             <CardBody>
-              <Image objectFit="cover" src={post.image1} />
+              <Image objectFit="cover" src={post.thumbnail} />
             </CardBody>
             <CardBody>
               <Grid templateColumns="repeat(5, 1fr)" gap={1}>
@@ -209,14 +201,14 @@ export default function Feed() {
                   <Heading size="md">{post.title}</Heading>
                   <Text>
                     해당 글 주소 : src=
-                    {`https://greenjoy.dev/api/posts/${index}`}
+                    {`https://greenjoy.dev/api/posts/${post.postId}`}
                   </Text>
                 </GridItem>
                 <GridItem colStart={4} colEnd={6}>
                   <Button
                     colorScheme="green"
                     variant="link"
-                    onClick={() => handleSeeMoreClick(index)}
+                    onClick={() => handleSeeMoreClick(post)}
                   >
                     See more ≫
                   </Button>
@@ -226,7 +218,7 @@ export default function Feed() {
             <CardFooter>
               <Flex spacing="1">
                 <Flex flex="1" gap="1" alignItems="center" flexWrap="wrap">
-                  <Avatar src={""} /> {/*사용자 이미지 연동 필요 */}
+                  <Avatar src={""} /> {/* 사용자 이미지 연동 필요 */}
                   <Box>
                     <Heading size="sm">{post.writer}</Heading>
                   </Box>
@@ -235,7 +227,7 @@ export default function Feed() {
               <Button
                 flex="1"
                 variant="ghost"
-                leftIcon=<FaHeart />
+                leftIcon={<FaHeart />}
                 onClick={() => handleLikeClick(index)}
               >
                 {post.likeCount}
