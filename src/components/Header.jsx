@@ -33,9 +33,7 @@ function Header() {
           <li>
             <Link to="/challenge">Challenge</Link>
           </li>
-          <li>
-            <Link to="">Donation</Link>
-          </li>
+
           {!isLoggedIn && (
             <li>
               <Link to="/login">LogIn</Link>

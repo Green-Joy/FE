@@ -35,6 +35,13 @@
     align-items: center;
 }
 
+#content4_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
 
 #contents {
     display: flex;
@@ -54,10 +61,19 @@
     height: 300px;
 }
 
+
+#challenge {
+    display: flex;
+    width: 850px;
+
+    height: 200px;
+}
+
 #news {
     width: 400px;
     /* background-color: #ffdaf7; */
 }
+
 
 #content2 {
     padding-left: 50px;
