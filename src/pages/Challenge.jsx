@@ -14,6 +14,7 @@ export default function Challenge() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [challenge, setChallenge] = useState(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [thisWeekChallenges, setThisWeekChallenges] = useState([]);
 
   // 오늘의 챌린지 가져오기
   useEffect(() => {
@@ -25,6 +26,22 @@ export default function Challenge() {
       .catch((error) => {
         console.error("Error fetching challenge:", error);
       });
+  }, []);
+
+  // 이번 주의 챌린지 가져오기
+  useEffect(() => {
+    const randomId = localStorage.getItem("randomId");
+    if (randomId) {
+      axios
+        .get(`https://greenjoy.dev/api/challenge?randomId=${randomId}`)
+        .then((response) => {
+          const thisWeekChallengesData = response.data.content.slice(0, 7);
+          setThisWeekChallenges(thisWeekChallengesData);
+        })
+        .catch((error) => {
+          console.error("Error fetching this week's challenges:", error);
+        });
+    }
   }, []);
 
   // 챌린지 인증 이미지 업로드
@@ -69,10 +86,13 @@ export default function Challenge() {
     }
   };
 
-  const activeDates = ["2024-01-01", "2024-01-03", "2024-01-05", "2024-01-07"];
-
-  const isDateActive = (date) => {
-    return activeDates.includes(date);
+  const gridItemStyle = {
+    width: "12px",
+    height: "12px",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   };
 
   return (
@@ -110,7 +130,6 @@ export default function Challenge() {
             marginTop={7}
             marginLeft={20}
             onClick={handleSubmit}
-            disabled={!selectedFile}
           >
             Upload
           </Button>
@@ -126,17 +145,32 @@ export default function Challenge() {
         >
           {[...Array(364)].map((_, index) => {
             const currentColumn = Math.floor(index % 52) + 1;
-            const currentRow = index / 52 + 1;
-            const formattedDate = `2024-01-${
-              currentRow < 10 ? "0" + currentRow : currentRow
-            }`;
+            const currentRow = Math.floor(index / 52) + 1;
+
+            // 날짜 계산
+            const currentDate = new Date(2024, 0, 1);
+            currentDate.setDate(
+              currentDate.getDate() + currentRow - 1 + (currentColumn - 1) * 7
+            );
+
+            // 챌린지 히스토리 데이터 중 날짜 데이터
+            const challenge = thisWeekChallenges.find(
+              (challenge) =>
+                new Date(challenge.challengeDate).toDateString() ===
+                currentDate.toDateString()
+            );
+
+            // thumbnail 유무로 잔디
+            const color =
+              challenge && challenge.thumbnail ? "lightgreen" : "gray.200";
+
             return (
               <Box
                 key={index}
-                w="12px"
-                h="12px"
-                bg={isDateActive(formattedDate) ? "lightgreen" : "gray.200"}
-              />
+                {...gridItemStyle}
+                bg={color}
+                title={currentDate.toDateString()}
+              ></Box>
             );
           })}
         </Box>
@@ -146,83 +180,22 @@ export default function Challenge() {
           This week
         </Heading>
         <Stack direction="row">
-          <Box>
-            <Image
-              boxSize="160px"
-              objectFit="cover"
-              src="https://bit.ly/dan-abramov"
-              alt="Dan Abramov"
-              marginRight={6}
-            />
-            <Text>텀블러 사용하기</Text>
-            <Text>2024 - 01 - 01</Text>
-          </Box>
-          <Box>
-            <Image
-              boxSize="160px"
-              objectFit="cover"
-              src="https://bit.ly/dan-abramov"
-              alt="Dan Abramov"
-              marginRight={6}
-            />
-            <Text>텀블러 사용하기</Text>
-            <Text>2024 - 01 - 01</Text>
-          </Box>
-          <Box>
-            <Image
-              boxSize="160px"
-              objectFit="cover"
-              src="https://bit.ly/dan-abramov"
-              alt="Dan Abramov"
-              marginRight={6}
-            />
-            <Text>텀블러 사용하기</Text>
-            <Text>2024 - 01 - 01</Text>
-          </Box>
-          <Box>
-            <Image
-              boxSize="160px"
-              objectFit="cover"
-              src="https://bit.ly/dan-abramov"
-              alt="Dan Abramov"
-              marginRight={6}
-            />
-            <Text>텀블러 사용하기</Text>
-            <Text>2024 - 01 - 01</Text>
-          </Box>
-          <Box>
-            <Image
-              boxSize="160px"
-              objectFit="cover"
-              src="https://bit.ly/dan-abramov"
-              alt="Dan Abramov"
-              marginRight={6}
-            />
-            <Text>텀블러 사용하기</Text>
-            <Text>2024 - 01 - 01</Text>
-          </Box>
-          <Box>
-            <Image
-              boxSize="160px"
-              objectFit="cover"
-              src="https://bit.ly/dan-abramov"
-              alt="Dan Abramov"
-              marginRight={6}
-            />
-            <Text>텀블러 사용하기</Text>
-            <Text>2024 - 01 - 01</Text>
-          </Box>
-          <Box>
-            <Image
-              boxSize="160px"
-              objectFit="cover"
-              src="https://bit.ly/dan-abramov"
-              alt="Dan Abramov"
-              marginRight={6}
-            />
-            <Text>텀블러 사용하기</Text>
-            <Text>2024 - 01 - 01</Text>
-          </Box>
+          {thisWeekChallenges.map((challenge, index) => (
+            <Box key={index}>
+              <Box boxSize="160px" bgColor="gray.200" marginRight={6}>
+                {challenge.thumbnail && (
+                  <Image
+                    boxSize="160px"
+                    objectFit="cover"
+                    src={challenge.thumbnail}
+                    alt={challenge.title}
+                  />
+                )}
+              </Box>
+              <Text>{challenge.title}</Text>
+              <Text>{challenge.challengeDate}</Text>
+            </Box>
+          ))}
         </Stack>
       </Box>
     </>
