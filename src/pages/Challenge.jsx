@@ -15,6 +15,7 @@ export default function Challenge() {
   const [challenge, setChallenge] = useState(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
 
+  // 오늘의 챌린지 가져오기
   useEffect(() => {
     axios
       .get("https://greenjoy.dev/api/challenge/today")
@@ -26,34 +27,46 @@ export default function Challenge() {
       });
   }, []);
 
+  // 챌린지 인증 이미지 업로드
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
   };
 
-  const handleSubmit = () => {
+  // 챌린지 인증
+  const handleSubmit = async () => {
     const formData = new FormData();
     formData.append("randomId", localStorage.getItem("randomId"));
-    formData.append(
-      "content",
-      `${new Date().getMonth() + 1}/${new Date().getDate()} ${challenge}`
-    );
+    formData.append("content", `${challenge}`);
     formData.append("image", selectedFile);
 
     // 디버깅
-    // for (var pair of formData.entries()) {
-    //   console.log(pair[0] + ", " + pair[1]);
-    // }
+    for (var pair of formData.entries()) {
+      console.log(pair[0] + ", " + pair[1]);
+    }
 
-    axios
-      .post("https://greenjoy.dev/api/challenge", formData)
-      .then((response) => {
-        console.log("Upload successful", response);
-        setUploadSuccess(true);
-      })
-      .catch((error) => {
-        console.error("Error uploading file:", error);
-      });
+    try {
+      const response = await axios.post(
+        "https://greenjoy.dev/api/challenge",
+        formData
+      );
+      console.log("Upload successful", response.data);
+      setUploadSuccess(true);
+    } catch (error) {
+      if (error.response) {
+        // 요청 성공, 서버 상태 코드
+        console.error(
+          "Server responded with status code:",
+          error.response.status
+        );
+      } else if (error.request) {
+        // 요청 성공, 응답 없음
+        console.error("No response received:", error.request);
+      } else {
+        // 요청 실패
+        console.error("Error:", error.message);
+      }
+    }
   };
 
   const activeDates = ["2024-01-01", "2024-01-03", "2024-01-05", "2024-01-07"];
