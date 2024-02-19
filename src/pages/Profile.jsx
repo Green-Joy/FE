@@ -41,7 +41,7 @@ const Profile = () => {
           posts: fetchedUserData.posts || [],
           email: fetchedUserData.email,
         });
-
+  
         setLoading(false);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -152,7 +152,7 @@ const Profile = () => {
       {/* Left side: Profile */}
       <Box p={3} pt={8}>
         <Center>
-          <Circle size="100px" bg="gray.200">
+          <Circle size="200px" bg="gray.200">
             {userData.profileImg ? (
               <Image
                 src={userData.profileImg}

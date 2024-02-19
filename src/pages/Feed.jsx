@@ -238,7 +238,7 @@ export default function Feed() {
             <CardFooter>
               <Flex spacing="1">
                 <Flex flex="1" gap="1" alignItems="center" flexWrap="wrap">
-                  <Avatar src={""} /> {/* 사용자 이미지 연동 필요 */}
+                  <Avatar src={post.profileImg} /> 
                   <Box>
                     <Heading size="sm">{post.writer}</Heading>
                   </Box>
