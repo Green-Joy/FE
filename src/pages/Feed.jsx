@@ -77,9 +77,7 @@ export default function Feed() {
     fetchComments();
   }, [selectedPost]);
 
-  if (postData.length === 0) {
-    return <div>Loading...</div>;
-  }
+
 
   const handleSeeMoreClick = async (post) => {
     setSelectedPost(post);
