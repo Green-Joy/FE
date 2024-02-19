@@ -15,6 +15,7 @@ export default function Challenge() {
   const [challenge, setChallenge] = useState(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [thisWeekChallenges, setThisWeekChallenges] = useState([]);
+  const [hasUploadedToday, setHasUploadedToday] = useState(false);
 
   // 오늘의 챌린지 가져오기
   useEffect(() => {
@@ -52,6 +53,20 @@ export default function Challenge() {
 
   // 챌린지 인증
   const handleSubmit = async () => {
+    // 이미 업로드한 경우
+    if (
+      thisWeekChallenges.some(
+        (challenge) =>
+          new Date(challenge.challengeDate).toDateString() ===
+            new Date().toDateString() && challenge.thumbnail
+      )
+    ) {
+      console.log("Already completed today's challenge with thumbnail!");
+      setUploadSuccess(false);
+      setHasUploadedToday(true);
+      return;
+    }
+
     const formData = new FormData();
     formData.append("randomId", localStorage.getItem("randomId"));
     formData.append("content", `${challenge}`);
@@ -69,6 +84,17 @@ export default function Challenge() {
       );
       console.log("Upload successful", response.data);
       setUploadSuccess(true);
+
+      const updatedChallenges = thisWeekChallenges.map((challenge) => {
+        if (
+          new Date(challenge.challengeDate).toDateString() ===
+          new Date().toDateString()
+        ) {
+          return { ...challenge, thumbnail: URL.createObjectURL(selectedFile) };
+        }
+        return challenge;
+      });
+      setThisWeekChallenges(updatedChallenges);
     } catch (error) {
       if (error.response) {
         // 요청 성공, 서버 상태 코드
@@ -124,12 +150,16 @@ export default function Challenge() {
             onChange={handleFileChange}
             accept="image/*"
           />
+          {!uploadSuccess && hasUploadedToday && (
+            <Text color="red">이미 챌린지를 인증했습니다.</Text>
+          )}
           <Button
             colorScheme="green"
             variant="solid"
             marginTop={7}
             marginLeft={20}
             onClick={handleSubmit}
+            disabled={hasUploadedToday}
           >
             Upload
           </Button>
