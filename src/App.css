@@ -11,4 +11,5 @@
   justify-content: flex-start;
   flex-direction: column;
   margin: 0 300px;
+  min-height: 650px;
 }

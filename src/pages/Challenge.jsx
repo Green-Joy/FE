@@ -135,74 +135,88 @@ export default function Challenge() {
       </Box>
       <Stack direction="row">
         <Box>
-          {selectedFile && (
-            <Image
-              src={URL.createObjectURL(selectedFile)}
-              mt={4}
-              maxW="100%"
-              maxH="200px"
-              overflow="hidden"
+          <Heading size="lg" marginBottom={4}>
+            Challenge Upload
+          </Heading>
+          <Box bg="white" border="1px solid #E2E8F0" borderRadius="md" p={4}>
+            {selectedFile && (
+              <Image
+                src={URL.createObjectURL(selectedFile)}
+                mt={4}
+                maxW="100%"
+                maxH="200px"
+                overflow="hidden"
+              />
+            )}
+            <Input
+              size="lg"
+              type="file"
+              onChange={handleFileChange}
+              accept="image/*"
             />
-          )}
-          <Input
-            size="lg"
-            type="file"
-            onChange={handleFileChange}
-            accept="image/*"
-          />
-          {!uploadSuccess && hasUploadedToday && (
-            <Text color="red">이미 챌린지를 인증했습니다.</Text>
-          )}
-          <Button
-            colorScheme="green"
-            variant="solid"
-            marginTop={7}
-            marginLeft={20}
-            onClick={handleSubmit}
-            disabled={hasUploadedToday}
-          >
-            Upload
-          </Button>
-          {uploadSuccess && <Text color="green">챌린지 성공!</Text>}
+            {!uploadSuccess && hasUploadedToday && (
+              <Text color="red">이미 챌린지를 인증했습니다.</Text>
+            )}
+            <Button
+              colorScheme="green"
+              variant="solid"
+              marginTop={7}
+              marginLeft={20}
+              onClick={handleSubmit}
+              disabled={hasUploadedToday}
+            >
+              Upload
+            </Button>
+            {uploadSuccess && <Text color="green">챌린지 성공!</Text>}
+          </Box>
         </Box>
-        <Box
-          display="grid"
-          gridTemplateColumns="repeat(52, 12px)"
-          gridTemplateRows="repeat(7, 12px)"
-          gap={1}
-          maxH="200px"
-          maxW="100%"
-        >
-          {[...Array(364)].map((_, index) => {
-            const currentColumn = Math.floor(index % 52) + 1;
-            const currentRow = Math.floor(index / 52) + 1;
+        <Box>
+          <Heading size="lg" marginBottom={4}>
+            Challenge History
+          </Heading>
+          <Box
+            display="grid"
+            gridTemplateColumns="repeat(52, 12px)"
+            gridTemplateRows="repeat(7, 12px)"
+            gap={1}
+            maxH="200px"
+            maxW="100%"
+            bg="white"
+            border="1px solid #E2E8F0"
+            borderRadius="md"
+            p={4}
+          >
+            {[...Array(364)].map((_, index) => {
+              const currentColumn = Math.floor(index % 52) + 1;
+              const currentRow = Math.floor(index / 52) + 1;
 
-            // 날짜 계산
-            const currentDate = new Date(2024, 0, 1);
-            currentDate.setDate(
-              currentDate.getDate() + currentRow - 1 + (currentColumn - 1) * 7
-            );
+              // 날짜 계산
+              const currentDate = new Date(2024, 0, 1);
+              currentDate.setDate(
+                currentDate.getDate() + currentRow - 1 + (currentColumn - 1) * 7
+              );
 
-            // 챌린지 히스토리 데이터 중 날짜 데이터
-            const challenge = thisWeekChallenges.find(
-              (challenge) =>
-                new Date(challenge.challengeDate).toDateString() ===
-                currentDate.toDateString()
-            );
+              // 챌린지 히스토리 데이터 중 날짜 데이터
+              const challenge = thisWeekChallenges.find(
+                (challenge) =>
+                  new Date(challenge.challengeDate).toDateString() ===
+                  currentDate.toDateString()
+              );
 
-            // thumbnail 유무로 잔디
-            const color =
-              challenge && challenge.thumbnail ? "lightgreen" : "gray.200";
+              // thumbnail 유무로 잔디
+              const color =
+                challenge && challenge.thumbnail ? "lightgreen" : "gray.200";
 
-            return (
-              <Box
-                key={index}
-                {...gridItemStyle}
-                bg={color}
-                title={currentDate.toDateString()}
-              ></Box>
-            );
-          })}
+              return (
+                <Box
+                  key={index}
+                  {...gridItemStyle}
+                  bg={color}
+                  title={currentDate.toDateString()}
+                ></Box>
+              );
+            })}
+          </Box>
         </Box>
       </Stack>
       <Box textAlign="left" margin={10} marginLeft={16}>
@@ -212,7 +226,13 @@ export default function Challenge() {
         <Stack direction="row">
           {thisWeekChallenges.map((challenge, index) => (
             <Box key={index}>
-              <Box boxSize="160px" bgColor="gray.200" marginRight={6}>
+              <Box
+                boxSize="200px"
+                bg="white"
+                border="1px solid #E2E8F0"
+                borderRadius="md"
+                p={4}
+              >
                 {challenge.thumbnail && (
                   <Image
                     boxSize="160px"

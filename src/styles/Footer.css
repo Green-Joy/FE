@@ -1,18 +1,25 @@
 footer {
-  background-color: #d6d6d6;
+  background-color: #317b3c;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  color: white;
 }
 
 .footer-wrapper {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   text-align: center;
-  color: black;
+  color: white;
+  margin: 10px;
+}
+
+.footer-wrapper h1 {
+  font-size: 31px;
+  margin-right: 10px;
 }
 
 .footer-items-wrapper {
@@ -30,11 +37,13 @@ footer {
   margin: 2px;
   text-align: left;
   width: 160px;
-  color: black;
+  color: white;
 }
 
 .footer-items h2 {
+  margin-top: 15px;
   margin-bottom: 16px;
+  font-size: 21px;
 }
 
 .info-container {
@@ -51,11 +60,15 @@ footer {
   text-align: center;
   font-size: 20px;
   margin: 0 10px 0 10px;
-  color: #000000;
+  color: white;
 }
 
 .info-container li p {
   display: flex;
   margin: 0 10px 0 10px;
   text-align: center;
+}
+
+.footer-copyright {
+  margin: 20px;
 }

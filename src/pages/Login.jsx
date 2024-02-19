@@ -13,7 +13,9 @@ function LoginPage() {
       <Heading as="h2" size="xl" m={5}>
         로그인 하시겠습니까?
       </Heading>
-      <Button onClick={onGoogleSocialLogin}>구글 소셜 로그인</Button>
+      <Button onClick={onGoogleSocialLogin} colorScheme="green">
+        구글 소셜 로그인
+      </Button>
     </div>
   );
 }
