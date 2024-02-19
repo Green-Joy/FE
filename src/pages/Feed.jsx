@@ -25,6 +25,7 @@ import {
   ModalCloseButton,
   useDisclosure,
   Textarea,
+  Divider,
 } from "@chakra-ui/react";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 
@@ -33,11 +34,11 @@ export default function Feed() {
   const [postData, setPostData] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
   const [likedPosts, setLikedPosts] = useState({});
-  const [comment, setComment] = useState("");
-  const [comments, setComments] = useState({});
-  const [postComments, setPostComments] = useState({});
+  const [commentInput, setCommentInput] = useState("");
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
+    
     const fetchData = async () => {
       try {
         const postResponse = await axios.get(
@@ -59,6 +60,25 @@ export default function Feed() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+  const fetchComments = async () => {
+    try {
+      if (selectedPost) {
+        const commentsResponse = await axios.get(
+          `https://greenjoy.dev/api/comments/${selectedPost.postId}?size=5&page=0&sort=createdAt,desc`
+        );
+        const commentsArray = commentsResponse.data.content;
+        setComments(commentsArray);
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
+  };
+
+  fetchComments();
+}, [selectedPost]);
+
+
   if (postData.length === 0) {
     return <div>Loading...</div>;
   }
@@ -68,21 +88,30 @@ export default function Feed() {
     onOpen();
   };
 
-  const fetchPostComments = async (post) => {
+
+  // 댓글 작성 보내는 버튼
+  const handleCommentSubmit = async () => {
     try {
-      const response = await axios.get(
-        `https://greenjoy.dev/api/comments/${post.postId}`
-      );
-      // postId를 키로 가지는 comments 객체에 댓글 저장
-      setComments((prevComments) => ({
-        ...prevComments,
-        [post.postId]: response.data,
-      }));
+      const randomId = localStorage.getItem("randomId");
+      if (!randomId) {
+        console.error("randomId not found in local storage");
+        return;
+      }
+
+      const postId = selectedPost.postId;
+
+      await axios.post("https://greenjoy.dev/api/comments", {
+        randomId,
+        postId,
+        content: commentInput,
+      });
+      console.log("댓글 작성 성공!");
+  
     } catch (error) {
-      console.error(`Error fetching comments for post ${post.postId}:`, error);
+      console.error("Error while handling comment submission", error);
     }
   };
-
+  
   const handleLikeClick = async (post) => {
     const postId = post.postId;
     const isLiked = !!likedPosts[postId];
@@ -133,45 +162,6 @@ export default function Feed() {
       localStorage.setItem("likedPosts", JSON.stringify(updatedLikedPosts));
     } catch (error) {
       console.error("Error while handling like click", error);
-    }
-  };
-
-  const handleCommentChange = (event) => {
-    setPostComments({
-      ...postComments,
-      [selectedPost.id]: event.target.value,
-    });
-  };
-
-  const handleCommentSubmit = async () => {
-    const randomId = localStorage.getItem("randomId");
-    const postId = selectedPost.index + 1;
-
-    if (!randomId) {
-      console.error("randomId not found in local storage");
-      return;
-    }
-
-    try {
-      const response = await axios.post("https://greenjoy.dev/api/comments", {
-        randomId,
-        content: postComments[selectedPost.id],
-        postId,
-      });
-
-      // 댓글 추가
-      setComments((prevComments) => ({
-        ...prevComments,
-        [postId]: [...(prevComments[postId] || []), response.data],
-      }));
-
-      // 댓글 입력창 초기화
-      setPostComments({
-        ...postComments,
-        [selectedPost.id]: "",
-      });
-    } catch (error) {
-      console.error("Error while submitting comment:", error);
     }
   };
 
@@ -254,32 +244,26 @@ export default function Feed() {
               justifyContent="center"
               textAlign="center"
             >
-              <Image src={selectedPost?.image1} />
+              <Image src={selectedPost?.thumbnail} />
               <Text>{selectedPost?.content}</Text>
               <Textarea
                 placeholder="댓글을 입력하세요"
-                value={postComments[selectedPost?.id] || ""}
-                onChange={handleCommentChange}
                 size="md"
                 mt={4}
+                value={commentInput}
+                onChange={(e) => setCommentInput(e.target.value)}
               />
-              <Button colorScheme="blue" onClick={handleCommentSubmit} mt={4}>
+              <Button colorScheme="blue" mt={4} onClick={handleCommentSubmit}>
                 댓글 작성
-              </Button>
-              {selectedPost &&
-                comments[selectedPost.id] &&
-                comments[selectedPost.id].map((comment, idx) => (
-                  <Box
-                    key={idx}
-                    borderWidth="1px"
-                    borderRadius="lg"
-                    p="2"
-                    my="1"
-                  >
-                    <Text>{comment.content}</Text>
-                  </Box>
-                ))}
-            </Box>
+              </Button>       
+            <Divider />
+            <Text>댓글 목록</Text>
+            {comments.map((comment) => (
+              <Box key={comment.commentId}>
+                <Text>{comment.writer} : {comment.content}</Text>
+              </Box>
+            ))}
+          </Box>
           </ModalBody>
         </ModalContent>
       </Modal>
