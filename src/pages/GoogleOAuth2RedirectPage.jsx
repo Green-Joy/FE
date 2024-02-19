@@ -19,7 +19,7 @@ function GoogleOAuth2RedirectPage() {
     axios
       .post(`https://greenjoy.dev/api/users/login`, { authCode })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         // 서버로부터 randomID를 받아옴
         const randomId = response.data.id;
         localStorage.setItem("randomId", randomId);
@@ -31,7 +31,7 @@ function GoogleOAuth2RedirectPage() {
         // 에러 처리
       });
 
-    console.log(authCode);
+    // console.log(authCode);
   }, [navigate]);
 
   return (
