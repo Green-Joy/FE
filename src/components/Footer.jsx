@@ -111,11 +111,6 @@ export default function Footer() {
           </ul>
         </div>
       </div>
-      <div className="footer-copyright">
-        <p>
-          Copyright &copy; <span>{thisYear()}</span>
-        </p>
-      </div>
     </footer>
   );
 }

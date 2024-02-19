@@ -8,11 +8,16 @@ function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    const randomId = localStorage.getItem("randomId");
+    if (randomId) {
       setIsLoggedIn(true);
     }
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("randomId");
+    setIsLoggedIn(false);
+  };
 
   return (
     <header>
@@ -33,10 +38,13 @@ function Header() {
           <li>
             <Link to="/challenge">Challenge</Link>
           </li>
-
-          {!isLoggedIn && (
+          {!isLoggedIn ? (
             <li>
               <Link to="/login">LogIn</Link>
+            </li>
+          ) : (
+            <li onClick={handleLogout}>
+              <Link to="/">Logout</Link>
             </li>
           )}
           <li>
