@@ -6,13 +6,12 @@
     width: 800px;
     height: 200px;
     background-color: #d69c9c;
-    padding: 100px;
+
 }
 
 #banner2 {
     width: 500px;
     background-color: #ee6b6b;
-    padding: 100px;
     height: 200px;
 }
 
@@ -40,8 +39,6 @@
     justify-content: space-between;
     align-items: center;
 }
-
-
 
 #contents {
     display: flex;

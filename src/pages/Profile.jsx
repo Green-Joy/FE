@@ -180,7 +180,7 @@ const Profile = () => {
       <VStack align="flex-start" flex="1" pb={10}>
         {/* My Posts Section */}
         <Box>
-          <Heading size="md" pt={5} m={2}>
+          <Heading pt={5} m={2}>
             My Posts
           </Heading>
           <SimpleGrid columns={3} spacing={2}>
@@ -219,7 +219,7 @@ const Profile = () => {
 
         {/* Matching Tips Section */}
         <Box>
-          <Heading size="md" pt={5} m={2}>
+          <Heading  pt={5} m={2}>
             My Tips
           </Heading>
           <SimpleGrid columns={3} spacing={2}>
