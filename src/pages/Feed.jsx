@@ -28,6 +28,7 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 export default function Feed() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -38,7 +39,6 @@ export default function Feed() {
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    
     const fetchData = async () => {
       try {
         const postResponse = await axios.get(
@@ -46,7 +46,6 @@ export default function Feed() {
         );
         const postDataArray = postResponse.data.content;
         setPostData(postDataArray);
-        //console.log(postDataArray)
       } catch (error) {
         console.error("Error fetching post data:", error);
       }
@@ -61,23 +60,22 @@ export default function Feed() {
   }, []);
 
   useEffect(() => {
-  const fetchComments = async () => {
-    try {
-      if (selectedPost) {
-        const commentsResponse = await axios.get(
-          `https://greenjoy.dev/api/comments/${selectedPost.postId}?size=5&page=0&sort=createdAt,desc`
-        );
-        const commentsArray = commentsResponse.data.content;
-        setComments(commentsArray);
+    const fetchComments = async () => {
+      try {
+        if (selectedPost) {
+          const commentsResponse = await axios.get(
+            `https://greenjoy.dev/api/comments/${selectedPost.postId}?size=5&page=0&sort=createdAt,desc`
+          );
+          const commentsArray = commentsResponse.data.content;
+          setComments(commentsArray);
+        }
+      } catch (error) {
+        console.error("Error fetching comments:", error);
       }
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-    }
-  };
+    };
 
-  fetchComments();
-}, [selectedPost]);
-
+    fetchComments();
+  }, [selectedPost]);
 
   if (postData.length === 0) {
     return <div>Loading...</div>;
@@ -88,9 +86,22 @@ export default function Feed() {
     onOpen();
   };
 
-
   // 댓글 작성 보내는 버튼
   const handleCommentSubmit = async () => {
+    const fetchComments = async () => {
+      try {
+        if (selectedPost) {
+          const commentsResponse = await axios.get(
+            `https://greenjoy.dev/api/comments/${selectedPost.postId}?size=5&page=0&sort=createdAt,desc`
+          );
+          const commentsArray = commentsResponse.data.content;
+          setComments(commentsArray);
+        }
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+
     try {
       const randomId = localStorage.getItem("randomId");
       if (!randomId) {
@@ -106,12 +117,31 @@ export default function Feed() {
         content: commentInput,
       });
       console.log("댓글 작성 성공!");
-  
+
+      fetchComments();
+
+      setCommentInput("");
     } catch (error) {
       console.error("Error while handling comment submission", error);
     }
   };
-  
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      const randomId = localStorage.getItem("randomId");
+
+      await axios.post(`https://greenjoy.dev/api/comments/${commentId}`, {
+        randomId: randomId,
+      });
+
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.commentId !== commentId)
+      );
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  };
+
   const handleLikeClick = async (post) => {
     const postId = post.postId;
     const isLiked = !!likedPosts[postId];
@@ -187,16 +217,12 @@ export default function Feed() {
         {postData.map((post, index) => (
           <Card key={index}>
             <CardBody>
-              <Image objectFit="cover" src={post.thumbnail} />
+              <Image boxSize="210px" objectFit="cover" src={post.thumbnail} />
             </CardBody>
             <CardBody>
               <Grid templateColumns="repeat(5, 1fr)" gap={1}>
                 <GridItem colSpan={2}>
                   <Heading size="md">{post.title}</Heading>
-                  <Text>
-                    해당 글 주소 : src=
-                    {`https://greenjoy.dev/api/posts/${post.postId}`}
-                  </Text>
                 </GridItem>
                 <GridItem colStart={4} colEnd={6}>
                   <Button
@@ -253,17 +279,39 @@ export default function Feed() {
                 value={commentInput}
                 onChange={(e) => setCommentInput(e.target.value)}
               />
-              <Button colorScheme="blue" mt={4} onClick={handleCommentSubmit}>
+              <Button
+                colorScheme="green"
+                mt={4}
+                mb={3}
+                onClick={handleCommentSubmit}
+              >
                 댓글 작성
-              </Button>       
-            <Divider />
-            <Text>댓글 목록</Text>
-            {comments.map((comment) => (
-              <Box key={comment.commentId}>
-                <Text>{comment.writer} : {comment.content}</Text>
-              </Box>
-            ))}
-          </Box>
+              </Button>
+              <Divider />
+              <Text marginTop={3} mb={3}>
+                댓글 목록
+              </Text>
+              {comments.map((comment) => (
+                <Flex key={comment.commentId} alignItems="center">
+                  <Box flex="1">
+                    <Text m={2}>
+                      {comment.writer} : {comment.content}
+                    </Text>
+                  </Box>
+                  <DeleteIcon
+                    className="delete-icon"
+                    onClick={() => handleDeleteComment(comment.commentId)}
+                    sx={{
+                      ":hover": {
+                        color: "red",
+                      },
+                      marginLeft: 2,
+                      cursor: "pointer",
+                    }}
+                  />
+                </Flex>
+              ))}
+            </Box>
           </ModalBody>
         </ModalContent>
       </Modal>

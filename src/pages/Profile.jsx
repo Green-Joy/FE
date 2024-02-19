@@ -25,8 +25,6 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-
-
   useEffect(() => {
     // 유저 데이터 불러오기
     const fetchData = async () => {
@@ -104,8 +102,6 @@ const Profile = () => {
       fetchMatchingTips();
     }
   }, [userData]);
-  
-
 
   // 피드 삭제
   const handleDeletePost = async (postId) => {
@@ -125,25 +121,23 @@ const Profile = () => {
     }
   };
 
+  // 꿀팁 삭제
+  const handleDeleteTip = async (infoId) => {
+    try {
+      const randomId = localStorage.getItem("randomId");
 
-    // 꿀팁 삭제
-    const handleDeleteTip = async (infoId) => {
-      try {
-        const randomId = localStorage.getItem("randomId");
-  
-        await axios.post(`https://greenjoy.dev/api/infos/${infoId}`, {
-          randomId: randomId,
-        });
-  
-        setMatchingTips((prevContents) =>
-          prevContents.filter((content) => content.infoId !== infoId)
-        );
-      } catch (error) {
-        console.error("Error deleting post:", error);
-        setError("Error deleting post");
-      }
-    };
+      await axios.post(`https://greenjoy.dev/api/infos/${infoId}`, {
+        randomId: randomId,
+      });
 
+      setMatchingTips((prevContents) =>
+        prevContents.filter((content) => content.infoId !== infoId)
+      );
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      setError("Error deleting post");
+    }
+  };
 
   if (loading) {
     return <Spinner />;
@@ -173,15 +167,17 @@ const Profile = () => {
         </Center>
 
         <Box textAlign="center">
-          <Heading size='md' m={5}>{userData.name}</Heading>
+          <Heading size="md" m={5}>
+            {userData.name}
+          </Heading>
         </Box>
         <Box borderWidth="1px" borderRadius="lg" m={5} p={5}>
           <Text>이메일: {userData.email}</Text>
         </Box>
       </Box>
 
-       {/* Right side: List of posts and matching tips */}
-       <VStack align="flex-start" flex="1" pb={10}>
+      {/* Right side: List of posts and matching tips */}
+      <VStack align="flex-start" flex="1" pb={10}>
         {/* My Posts Section */}
         <Box>
           <Heading size="md" pt={5} m={2}>
@@ -189,7 +185,14 @@ const Profile = () => {
           </Heading>
           <SimpleGrid columns={3} spacing={2}>
             {matchingContents.map((content) => (
-              <GridItem width="200px" key={content.id} p={3} borderWidth="1px" borderRadius="lg">
+              <GridItem
+                width="200px"
+                key={content.id}
+                p={3}
+                bgColor="white"
+                borderWidth="1px"
+                borderRadius="lg"
+              >
                 <Heading size="sm" mb={2}>
                   <DeleteIcon
                     className="delete-icon"
@@ -198,6 +201,11 @@ const Profile = () => {
                       ":hover": {
                         color: "red",
                       },
+                      marginTop: 2,
+                      marginBottom: 2,
+                      marginLeft: "auto",
+                      marginRight: "auto",
+                      display: "block",
                     }}
                   />
                   <Image src={content.thumbnail} />
@@ -211,27 +219,38 @@ const Profile = () => {
 
         {/* Matching Tips Section */}
         <Box>
-          <Heading size="md" pt={5} m={2} >
+          <Heading size="md" pt={5} m={2}>
             Matching Tips
           </Heading>
           <SimpleGrid columns={3} spacing={2}>
             {matchingTips.map((tip) => (
-              <GridItem width="200px" key={tip.id} p={3} borderWidth="1px" borderRadius="lg">
+              <GridItem
+                width="200px"
+                key={tip.id}
+                p={3}
+                bgColor="white"
+                borderWidth="1px"
+                borderRadius="lg"
+              >
                 <Heading size="sm" mb={2}>
-                <DeleteIcon
+                  <DeleteIcon
                     className="delete-icon"
                     onClick={() => handleDeleteTip(tip.infoId)}
                     sx={{
                       ":hover": {
                         color: "red",
                       },
+                      marginTop: 2,
+                      marginBottom: 2,
+                      marginLeft: "auto",
+                      marginRight: "auto",
+                      display: "block",
                     }}
                   />
                   <Image src={tip.thumbnail} />
                   {tip.title}
                 </Heading>
                 <Text>{tip.content}</Text>
-          
               </GridItem>
             ))}
           </SimpleGrid>
