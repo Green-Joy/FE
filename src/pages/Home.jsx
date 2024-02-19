@@ -44,8 +44,8 @@ const FeedModal = ({ post, onClose }) => {
         <ModalBody>
           <Box p={2}>
             <Image src={post.thumbnail} alt={`Thumbnail for ${post.writer}`} />
-            <Text>Writer : {post.writer}</Text>
-            <Text>{post.content}</Text>
+            <Text py={2} fontSize='lg'>Writer : {post.writer}</Text>
+            <Text fontSize='lg'>{post.content}</Text>
           </Box>
         </ModalBody>
       </ModalContent>
@@ -68,8 +68,8 @@ const TipModal = ({ tip, onClose }) => {
         <ModalBody>
           <Box  p={2}>
             <Image src={tip.thumbnail} alt={`Thumbnail for ${tip.title}`} />
-             <Text>Writer : {tip.writer}</Text>
-            <Text>{tip.content}</Text>
+             <Text  py={2} fontSize='lg'>Writer : {tip.writer}</Text>
+            <Text fontSize='lg'>{tip.content}</Text>
           </Box>
         </ModalBody>
       </ModalContent>
@@ -154,51 +154,51 @@ export default function Home() {
       <div id="contents">
         <div id="content1">
           <div id="content1_header">
-            <Text fontSize="lg">FEED</Text>
+            <Heading py={3}>FEED</Heading>
             <Link to="/feed">See more</Link>
           </div>
 
           <div id="feeds">
             {postData.map((post, index) => (
-              <Box key={index} boxSize="sm" p={2}
+              <Box w={250} h={250} bg="white" border="1px solid #E2E8F0" borderRadius="md" p={4}  key={index}  objectFit='cover' p={2}
               onClick={() => openFeedModal(post)}
               _hover={{ transform: 'scale(1.05)' }}
               cursor="pointer"
               >
-                <Image src={post.thumbnail} alt={`Post ${index}`} />
-                <Text>{post.writer}</Text>
+                <Image boxSize='200px' src={post.thumbnail} alt={`Post ${index}`} />
+                <Text pt={2} pr={2}align="right">{post.writer}</Text>
               </Box>
+          
             ))}
           </div>
 
           <div id="content2_header">
-            <Text fontSize="lg">TIPS</Text>
+            <Heading pb={3} >TIPS</Heading>
             <Link to="/event">See more</Link>
           </div>
 
           <div id="events">
             {tipData.map((tip, index) => (
-              <Box key={index} boxSize="sm" p={2} 
+              <Box  h={300} w={250} key={index} bg="white" border="1px solid #E2E8F0" borderRadius="md" p={4} overflow='hidden' key={index}  objectFit='cover'  p={2} 
               onClick={() => openTipModal(tip)}
               _hover={{ transform: 'scale(1.05)' }}
               cursor="pointer"
             
               >
-                <Image src={tip.thumbnail} alt={`Thumbnail for ${tip.title}`} />
-                <Text>{tip.title}</Text>
+                <Image boxSize='200px' src={tip.thumbnail} alt={`Thumbnail for ${tip.title}`} />
+                <Text pt={2} align={'center'}>{tip.title}</Text>
               </Box>
             ))}
           </div>
           
           <div id="content4_header">
-            <Text fontSize="lg">CHALLENGE</Text>
-            <Link to="/challenge">챌린지 올리러 가기</Link>
+            <Heading pt={6} pb={3} > TODAY'S CHALLENGE</Heading>
+            <Link to="/challenge">See more</Link>
           </div>
 
           <div id="challenge">
           <Box boxSize="sm" p={2}>
-            <Text>오늘의 챌린지</Text>
-            <Text>{challengeData}</Text>
+            <Heading size='md' > {challengeData}</Heading>
           </Box>
         </div>
           
@@ -207,12 +207,12 @@ export default function Home() {
         <div id="content2">
           <div id="news">
             <div id="content3_header">
-              <Text fontSize="lg"> NEWS</Text>
+              <Heading py={3}> NEWS</Heading>
               <Link to="/event">See more</Link>
             </div>
             {newsData.map((news, index) => (
               <Card key={index} p={2} direction={{ base: 'column', sm: 'row' }} overflow="hidden" variant="outline">
-                <Image
+                <Image h={200}
                   objectFit="cover"
                   maxW={{ base: '100%', sm: '200px' }}
                   src={news.image}
@@ -220,7 +220,7 @@ export default function Home() {
                 />
                 <Stack>
                   <CardBody>
-                    <Heading size="md">{news.title}</Heading>
+                    <Heading size="sm">{news.title}</Heading>
                   </CardBody>
                   <CardFooter>
                     <Button onClick={() => openUrlInNewTab(news.url)} variant="solid" colorScheme="blue">

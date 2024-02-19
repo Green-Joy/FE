@@ -4,7 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 export default function SimpleSlider1() {
-  var settings = {
+  const settings = {
     dots: true,
     infinite: true,
     speed: 500,
@@ -16,23 +16,21 @@ export default function SimpleSlider1() {
   return (
     <Slider {...settings}>
       <div>
-        <h1>이미지 넣기1</h1>
+      <img src="../../components/banner1.jpg" alt="Image 1" />
       </div>
       <div>
-      <h1>이미지 넣기2</h1>
+      <img src="path/to/image1.jpg" alt="Image 1" />
       </div>
       <div>
-      <h1>이미지 넣기3</h1>
+      <img src="path/to/image1.jpg" alt="Image 1" />
       </div>
       <div>
-      <h1>이미지 넣기4</h1>
+      <img src="path/to/image1.jpg" alt="Image 1" />
       </div>
       <div>
-      <h1>이미지 넣기5</h1>
+      <img src="path/to/image1.jpg" alt="Image 1" />
       </div>
-      <div>
-      <h1>이미지 넣기6</h1>
-      </div>
+      
     </Slider>
   );
 }
