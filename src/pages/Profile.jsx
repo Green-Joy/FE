@@ -209,9 +209,9 @@ const Profile = () => {
                     }}
                   />
                   <Image src={content.thumbnail} />
-                  {content.title}
+                  <Text pt={2}> {content.title}</Text>
                 </Heading>
-                <Text>{content.content}</Text>
+                <Text >{content.content}</Text>
               </GridItem>
             ))}
           </SimpleGrid>
@@ -220,7 +220,7 @@ const Profile = () => {
         {/* Matching Tips Section */}
         <Box>
           <Heading size="md" pt={5} m={2}>
-            Matching Tips
+            My Tips
           </Heading>
           <SimpleGrid columns={3} spacing={2}>
             {matchingTips.map((tip) => (
@@ -248,7 +248,7 @@ const Profile = () => {
                     }}
                   />
                   <Image src={tip.thumbnail} />
-                  {tip.title}
+                  <Text pt={2}> {tip.title}</Text>
                 </Heading>
                 <Text>{tip.content}</Text>
               </GridItem>

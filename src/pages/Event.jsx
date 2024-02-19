@@ -97,12 +97,12 @@ export default function Event() {
                   </Text>
                 </CardBody>
                 <CardFooter justifyContent="flex-end">
-                  <Button colorScheme="green" variant="link" onClick={() => handleSeeMoreNews(news)}>
+                  <Button mr={5} colorScheme="green" variant="link" onClick={() => handleSeeMoreNews(news)}>
                     Preview
                   </Button>
 
                   <Link to={news.url} target="_blank" rel="noopener noreferrer">
-                    <Button colorScheme="green" variant="link">
+                    <Button  colorScheme="green" variant="link">
                       Read more
                     </Button>
                   </Link>
@@ -147,8 +147,8 @@ export default function Event() {
                   </Text>
                 </CardBody>
                 <CardFooter justifyContent="flex-end">
-                  <Button colorScheme="green" variant="link" onClick={() => handleSeeMoreTip(tip)}>
-                    See more ≫
+                  <Button ml="auto" colorScheme="green" variant="link" onClick={() => handleSeeMoreTip(tip)}>
+                    See more
                   </Button>
                 </CardFooter>
               </Stack>

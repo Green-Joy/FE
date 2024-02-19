@@ -160,7 +160,7 @@ export default function Home() {
 
           <div id="feeds">
             {postData.map((post, index) => (
-              <Box w={250} h={250} bg="white" border="1px solid #E2E8F0" borderRadius="md" p={4}  key={index}  objectFit='cover' p={2}
+              <Box margin={1} w={250} h={250} bg="white" border="1px solid #E2E8F0" borderRadius="md" p={4}  key={index}  objectFit='cover' p={2}
               onClick={() => openFeedModal(post)}
               _hover={{ transform: 'scale(1.05)' }}
               cursor="pointer"
@@ -179,7 +179,7 @@ export default function Home() {
 
           <div id="events">
             {tipData.map((tip, index) => (
-              <Box  h={300} w={250} key={index} bg="white" border="1px solid #E2E8F0" borderRadius="md" p={4} overflow='hidden' key={index}  objectFit='cover'  p={2} 
+              <Box margin={1} h={300} w={250} key={index} bg="white" border="1px solid #E2E8F0" borderRadius="md" p={4} overflow='hidden' key={index}  objectFit='cover'  p={2} 
               onClick={() => openTipModal(tip)}
               _hover={{ transform: 'scale(1.05)' }}
               cursor="pointer"
@@ -211,7 +211,7 @@ export default function Home() {
               <Link to="/event">See more</Link>
             </div>
             {newsData.map((news, index) => (
-              <Card key={index} p={2} direction={{ base: 'column', sm: 'row' }} overflow="hidden" variant="outline">
+              <Card margin={1} key={index} p={2} direction={{ base: 'column', sm: 'row' }} overflow="hidden" variant="outline">
                 <Image h={200}
                   objectFit="cover"
                   maxW={{ base: '100%', sm: '200px' }}

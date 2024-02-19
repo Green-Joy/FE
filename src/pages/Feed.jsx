@@ -217,7 +217,7 @@ export default function Feed() {
         {postData.map((post, index) => (
           <Card key={index}>
             <CardBody>
-              <Image boxSize="210px" objectFit="cover" src={post.thumbnail} />
+              <Image boxSize="300px" objectFit="cover" src={post.thumbnail} />
             </CardBody>
             <CardBody>
               <Grid templateColumns="repeat(5, 1fr)" gap={1}>
