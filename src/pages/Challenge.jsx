@@ -73,16 +73,16 @@ export default function Challenge() {
     formData.append("image", selectedFile);
 
     // 디버깅
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
+    // for (var pair of formData.entries()) {
+    //   console.log(pair[0] + ", " + pair[1]);
+    // }
 
     try {
       const response = await axios.post(
         "https://greenjoy.dev/api/challenge",
         formData
       );
-      console.log("Upload successful", response.data);
+      // console.log("Upload successful", response.data);
       setUploadSuccess(true);
 
       const updatedChallenges = thisWeekChallenges.map((challenge) => {
